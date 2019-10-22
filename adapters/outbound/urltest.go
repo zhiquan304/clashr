@@ -33,9 +33,9 @@ func (u *URLTest) Now() string {
 	return u.fast.Name()
 }
 
-func (u *URLTest) Dial(metadata *C.Metadata) (c C.Conn, err error) {
+func (u *URLTest) DialContext(ctx context.Context, metadata *C.Metadata) (c C.Conn, err error) {
 	for i := 0; i < 3; i++ {
-		c, err = u.fast.Dial(metadata)
+		c, err = u.fast.DialContext(ctx, metadata)
 		if err == nil {
 			c.AppendToChains(u)
 			return
@@ -75,12 +75,15 @@ func (u *URLTest) Destroy() {
 
 func (u *URLTest) loop() {
 	tick := time.NewTicker(u.interval)
-	go u.speedTest()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go u.speedTest(ctx)
 Loop:
 	for {
 		select {
 		case <-tick.C:
-			go u.speedTest()
+			go u.speedTest(ctx)
 		case <-u.done:
 			break Loop
 		}
@@ -104,14 +107,15 @@ func (u *URLTest) fallback() {
 	u.fast = fast
 }
 
-func (u *URLTest) speedTest() {
+func (u *URLTest) speedTest(ctx context.Context) {
 	if !atomic.CompareAndSwapInt32(&u.once, 0, 1) {
 		return
 	}
 	defer atomic.StoreInt32(&u.once, 0)
 
-	picker, ctx, cancel := picker.WithTimeout(context.Background(), defaultURLTestTimeout)
+	ctx, cancel := context.WithTimeout(ctx, defaultURLTestTimeout)
 	defer cancel()
+	picker := picker.WithoutAutoCancel(ctx)
 	for _, p := range u.proxies {
 		proxy := p
 		picker.Go(func() (interface{}, error) {
@@ -123,10 +127,12 @@ func (u *URLTest) speedTest() {
 		})
 	}
 
-	fast := picker.Wait()
+	fast := picker.WaitWithoutCancel()
 	if fast != nil {
 		u.fast = fast.(C.Proxy)
 	}
+
+	picker.Wait()
 }
 
 func NewURLTest(option URLTestOption, proxies []C.Proxy) (*URLTest, error) {

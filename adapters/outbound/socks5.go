@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"io"
@@ -33,8 +34,8 @@ type Socks5Option struct {
 	SkipCertVerify bool   `proxy:"skip-cert-verify,omitempty"`
 }
 
-func (ss *Socks5) Dial(metadata *C.Metadata) (C.Conn, error) {
-	c, err := dialTimeout("tcp", ss.addr, tcpTimeout)
+func (ss *Socks5) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
+	c, err := dialContext(ctx, "tcp", ss.addr)
 
 	if err == nil && ss.tls {
 		cc := tls.Client(c, ss.tlsConfig)
@@ -60,7 +61,9 @@ func (ss *Socks5) Dial(metadata *C.Metadata) (C.Conn, error) {
 }
 
 func (ss *Socks5) DialUDP(metadata *C.Metadata) (_ C.PacketConn, _ net.Addr, err error) {
-	c, err := dialTimeout("tcp", ss.addr, tcpTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), tcpTimeout)
+	defer cancel()
+	c, err := dialContext(ctx, "tcp", ss.addr)
 	if err != nil {
 		err = fmt.Errorf("%s connect error", ss.addr)
 		return
@@ -98,9 +101,9 @@ func (ss *Socks5) DialUDP(metadata *C.Metadata) (_ C.PacketConn, _ net.Addr, err
 		return
 	}
 
-	targetAddr, err := net.ResolveUDPAddr("udp", net.JoinHostPort(metadata.String(), metadata.DstPort))
-	if err != nil {
-		return
+	targetAddr := socks5.ParseAddr(metadata.RemoteAddress())
+	if targetAddr == nil {
+		return nil, nil, fmt.Errorf("parse address error: %v:%v", metadata.String(), metadata.DstPort)
 	}
 
 	pc, err := net.ListenPacket("udp", "")
@@ -146,12 +149,12 @@ func NewSocks5(option Socks5Option) *Socks5 {
 
 type socksUDPConn struct {
 	net.PacketConn
-	rAddr   net.Addr
+	rAddr   socks5.Addr
 	tcpConn net.Conn
 }
 
 func (uc *socksUDPConn) WriteTo(b []byte, addr net.Addr) (n int, err error) {
-	packet, err := socks5.EncodeUDPPacket(uc.rAddr.String(), b)
+	packet, err := socks5.EncodeUDPPacket(uc.rAddr, b)
 	if err != nil {
 		return
 	}
@@ -160,12 +163,17 @@ func (uc *socksUDPConn) WriteTo(b []byte, addr net.Addr) (n int, err error) {
 
 func (uc *socksUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	n, a, e := uc.PacketConn.ReadFrom(b)
+	if e != nil {
+		return 0, nil, e
+	}
 	addr, payload, err := socks5.DecodeUDPPacket(b)
 	if err != nil {
 		return 0, nil, err
 	}
+	// due to DecodeUDPPacket is mutable, record addr length
+	addrLength := len(addr)
 	copy(b, payload)
-	return n - len(addr) - 3, a, e
+	return n - addrLength - 3, a, nil
 }
 
 func (uc *socksUDPConn) Close() error {

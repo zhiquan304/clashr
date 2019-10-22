@@ -1,13 +1,13 @@
 package adapters
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net"
 	"strconv"
 
-	"github.com/Dreamacro/clash/common/pool"
 	"github.com/Dreamacro/clash/common/structure"
 	obfs "github.com/Dreamacro/clash/component/simple-obfs"
 	"github.com/Dreamacro/clash/component/socks5"
@@ -58,8 +58,8 @@ type v2rayObfsOption struct {
 	Mux            bool              `obfs:"mux,omitempty"`
 }
 
-func (ss *ShadowSocks) Dial(metadata *C.Metadata) (C.Conn, error) {
-	c, err := dialTimeout("tcp", ss.server, tcpTimeout)
+func (ss *ShadowSocks) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
+	c, err := dialContext(ctx, "tcp", ss.server)
 	if err != nil {
 		return nil, fmt.Errorf("%s connect error: %s", ss.server, err.Error())
 	}
@@ -93,9 +93,9 @@ func (ss *ShadowSocks) DialUDP(metadata *C.Metadata) (C.PacketConn, net.Addr, er
 		return nil, nil, err
 	}
 
-	targetAddr, err := net.ResolveUDPAddr("udp", net.JoinHostPort(metadata.String(), metadata.DstPort))
-	if err != nil {
-		return nil, nil, err
+	targetAddr := socks5.ParseAddr(metadata.RemoteAddress())
+	if targetAddr == nil {
+		return nil, nil, fmt.Errorf("parse address error: %v:%v", metadata.String(), metadata.DstPort)
 	}
 
 	pc = ss.cipher.PacketConn(pc)
@@ -189,16 +189,15 @@ func NewShadowSocks(option ShadowSocksOption) (*ShadowSocks, error) {
 
 type ssUDPConn struct {
 	net.PacketConn
-	rAddr net.Addr
+	rAddr socks5.Addr
 }
 
-func (uc *ssUDPConn) WriteTo(b []byte, addr net.Addr) (int, error) {
-	buf := pool.BufPool.Get().([]byte)
-	defer pool.BufPool.Put(buf[:cap(buf)])
-	rAddr := socks5.ParseAddr(uc.rAddr.String())
-	copy(buf[len(rAddr):], b)
-	copy(buf, rAddr)
-	return uc.PacketConn.WriteTo(buf[:len(rAddr)+len(b)], addr)
+func (uc *ssUDPConn) WriteTo(b []byte, addr net.Addr) (n int, err error) {
+	packet, err := socks5.EncodeUDPPacket(uc.rAddr, b)
+	if err != nil {
+		return
+	}
+	return uc.PacketConn.WriteTo(packet[3:], addr)
 }
 
 func (uc *ssUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {

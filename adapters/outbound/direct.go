@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"context"
 	"net"
 
 	C "github.com/Dreamacro/clash/constant"
@@ -10,13 +11,13 @@ type Direct struct {
 	*Base
 }
 
-func (d *Direct) Dial(metadata *C.Metadata) (C.Conn, error) {
+func (d *Direct) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
 	address := net.JoinHostPort(metadata.Host, metadata.DstPort)
 	if metadata.DstIP != nil {
 		address = net.JoinHostPort(metadata.DstIP.String(), metadata.DstPort)
 	}
 
-	c, err := dialTimeout("tcp", address, tcpTimeout)
+	c, err := dialContext(ctx, "tcp", address)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +31,7 @@ func (d *Direct) DialUDP(metadata *C.Metadata) (C.PacketConn, net.Addr, error) {
 		return nil, nil, err
 	}
 
-	addr, err := resolveUDPAddr("udp", net.JoinHostPort(metadata.String(), metadata.DstPort))
+	addr, err := resolveUDPAddr("udp", metadata.RemoteAddress())
 	if err != nil {
 		return nil, nil, err
 	}

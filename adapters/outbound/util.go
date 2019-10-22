@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/zu1k/clashr/component/socks5"
-	C "github.com/zu1k/clashr/constant"
-	"github.com/zu1k/clashr/dns"
+	"github.com/whojave/clashr/component/socks5"
+	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clashr/dns"
 )
 
 const (

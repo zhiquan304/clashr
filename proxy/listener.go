@@ -5,9 +5,9 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/zu1k/clashr/proxy/http"
-	"github.com/zu1k/clashr/proxy/redir"
-	"github.com/zu1k/clashr/proxy/socks"
+	"github.com/whojave/clashr/proxy/http"
+	"github.com/whojave/clashr/proxy/redir"
+	"github.com/whojave/clashr/proxy/socks"
 )
 
 var (

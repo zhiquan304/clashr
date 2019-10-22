@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/zu1k/clashr/common/queue"
-	C "github.com/zu1k/clashr/constant"
+	"github.com/whojave/clashr/common/queue"
+	C "github.com/whojave/clashr/constant"
 )
 
 var (

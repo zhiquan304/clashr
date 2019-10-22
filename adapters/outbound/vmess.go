@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/zu1k/clashr/component/vmess"
-	C "github.com/zu1k/clashr/constant"
+	"github.com/whojave/clashr/component/vmess"
+	C "github.com/whojave/clashr/constant"
 )
 
 type Vmess struct {

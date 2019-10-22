@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"net"
 
-	adapters "github.com/zu1k/clashr/adapters/inbound"
-	"github.com/zu1k/clashr/common/pool"
-	"github.com/zu1k/clashr/component/socks5"
-	C "github.com/zu1k/clashr/constant"
+	adapters "github.com/whojave/clashr/adapters/inbound"
+	"github.com/whojave/clashr/common/pool"
+	"github.com/whojave/clashr/component/socks5"
+	C "github.com/whojave/clashr/constant"
 )
 
 type SockUDPListener struct {

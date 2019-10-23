@@ -110,27 +110,23 @@ func getProxyDelay(w http.ResponseWriter, r *http.Request) {
 
 	proxy := r.Context().Value(CtxKeyProxy).(C.Proxy)
 
-	sigCh := make(chan uint16)
-	go func() {
-		t, err := proxy.URLTest(url)
-		if err != nil {
-			sigCh <- 0
-		}
-		sigCh <- t
-	}()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*time.Duration(timeout))
+	defer cancel()
 
-	select {
-	case <-time.After(time.Millisecond * time.Duration(timeout)):
-		render.Status(r, http.StatusRequestTimeout)
+	delay, err := proxy.URLTest(ctx, url)
+	if ctx.Err() != nil {
+		render.Status(r, http.StatusGatewayTimeout)
 		render.JSON(w, r, ErrRequestTimeout)
-	case t := <-sigCh:
-		if t == 0 {
-			render.Status(r, http.StatusServiceUnavailable)
-			render.JSON(w, r, newError("An error occurred in the delay test"))
-		} else {
-			render.JSON(w, r, render.M{
-				"delay": t,
-			})
-		}
+		return
 	}
+
+	if err != nil || delay == 0 {
+		render.Status(r, http.StatusServiceUnavailable)
+		render.JSON(w, r, newError("An error occurred in the delay test"))
+		return
+	}
+
+	render.JSON(w, r, render.M{
+		"delay": delay,
+	})
 }

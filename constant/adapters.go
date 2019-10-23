@@ -1,6 +1,8 @@
 package constant
 
 import (
+	"context"
+	"fmt"
 	"net"
 	"time"
 )
@@ -12,6 +14,7 @@ const (
 	Reject
 	Selector
 	Shadowsocks
+	Snell
 	Socks5
 	Http
 	URLTest
@@ -24,11 +27,39 @@ type ServerAdapter interface {
 	Metadata() *Metadata
 }
 
+type Connection interface {
+	Chains() Chain
+	AppendToChains(adapter ProxyAdapter)
+}
+
+type Chain []string
+
+func (c Chain) String() string {
+	switch len(c) {
+	case 0:
+		return ""
+	case 1:
+		return c[0]
+	default:
+		return fmt.Sprintf("%s[%s]", c[len(c)-1], c[0])
+	}
+}
+
+type Conn interface {
+	net.Conn
+	Connection
+}
+
+type PacketConn interface {
+	net.PacketConn
+	Connection
+}
+
 type ProxyAdapter interface {
 	Name() string
 	Type() AdapterType
-	Dial(metadata *Metadata) (net.Conn, error)
-	DialUDP(metadata *Metadata) (net.PacketConn, net.Addr, error)
+	DialContext(ctx context.Context, metadata *Metadata) (Conn, error)
+	DialUDP(metadata *Metadata) (PacketConn, net.Addr, error)
 	SupportUDP() bool
 	Destroy()
 	MarshalJSON() ([]byte, error)
@@ -43,8 +74,9 @@ type Proxy interface {
 	ProxyAdapter
 	Alive() bool
 	DelayHistory() []DelayHistory
+	Dial(metadata *Metadata) (Conn, error)
 	LastDelay() uint16
-	URLTest(url string) (uint16, error)
+	URLTest(ctx context.Context, url string) (uint16, error)
 }
 
 // AdapterType is enum of adapter type
@@ -62,6 +94,8 @@ func (at AdapterType) String() string {
 		return "Selector"
 	case Shadowsocks:
 		return "Shadowsocks"
+	case Snell:
+		return "Snell"
 	case Socks5:
 		return "Socks5"
 	case Http:
@@ -73,6 +107,6 @@ func (at AdapterType) String() string {
 	case LoadBalance:
 		return "LoadBalance"
 	default:
-		return "Unknow"
+		return "Unknown"
 	}
 }

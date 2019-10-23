@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"context"
 	"io"
 	"net"
 	"time"
@@ -12,8 +13,8 @@ type Reject struct {
 	*Base
 }
 
-func (r *Reject) Dial(metadata *C.Metadata) (net.Conn, error) {
-	return &NopConn{}, nil
+func (r *Reject) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
+	return newConn(&NopConn{}, r), nil
 }
 
 func NewReject() *Reject {

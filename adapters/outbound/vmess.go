@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"strconv"
@@ -31,24 +32,29 @@ type VmessOption struct {
 	SkipCertVerify bool              `proxy:"skip-cert-verify,omitempty"`
 }
 
-func (v *Vmess) Dial(metadata *C.Metadata) (net.Conn, error) {
-	c, err := dialTimeout("tcp", v.server, tcpTimeout)
+func (v *Vmess) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
+	c, err := dialContext(ctx, "tcp", v.server)
 	if err != nil {
 		return nil, fmt.Errorf("%s connect error", v.server)
 	}
 	tcpKeepAlive(c)
 	c, err = v.client.New(c, parseVmessAddr(metadata))
-	return c, err
+	return newConn(c, v), err
 }
 
-func (v *Vmess) DialUDP(metadata *C.Metadata) (net.PacketConn, net.Addr, error) {
-	c, err := dialTimeout("tcp", v.server, tcpTimeout)
+func (v *Vmess) DialUDP(metadata *C.Metadata) (C.PacketConn, net.Addr, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), tcpTimeout)
+	defer cancel()
+	c, err := dialContext(ctx, "tcp", v.server)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s connect error", v.server)
 	}
 	tcpKeepAlive(c)
 	c, err = v.client.New(c, parseVmessAddr(metadata))
-	return &fakeUDPConn{Conn: c}, c.LocalAddr(), err
+	if err != nil {
+		return nil, nil, fmt.Errorf("new vmess client error: %v", err)
+	}
+	return newPacketConn(&vmessUDPConn{Conn: c}, v), c.RemoteAddr(), nil
 }
 
 func NewVmess(option VmessOption) (*Vmess, error) {
@@ -64,7 +70,7 @@ func NewVmess(option VmessOption) (*Vmess, error) {
 		WebSocketPath:    option.WSPath,
 		WebSocketHeaders: option.WSHeaders,
 		SkipCertVerify:   option.SkipCertVerify,
-		SessionCacahe:    getClientSessionCache(),
+		SessionCache:     getClientSessionCache(),
 	})
 	if err != nil {
 		return nil, err
@@ -74,7 +80,7 @@ func NewVmess(option VmessOption) (*Vmess, error) {
 		Base: &Base{
 			name: option.Name,
 			tp:   C.Vmess,
-			udp:  option.UDP,
+			udp:  true,
 		},
 		server: net.JoinHostPort(option.Server, strconv.Itoa(option.Port)),
 		client: client,
@@ -107,4 +113,17 @@ func parseVmessAddr(metadata *C.Metadata) *vmess.DstAddr {
 		Addr:     addr,
 		Port:     uint(port),
 	}
+}
+
+type vmessUDPConn struct {
+	net.Conn
+}
+
+func (uc *vmessUDPConn) WriteTo(b []byte, addr net.Addr) (int, error) {
+	return uc.Conn.Write(b)
+}
+
+func (uc *vmessUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {
+	n, err := uc.Conn.Read(b)
+	return n, uc.RemoteAddr(), err
 }

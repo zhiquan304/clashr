@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net"
-	"sync"
 	"sync/atomic"
 	"time"
 
@@ -34,16 +33,24 @@ func (u *URLTest) Now() string {
 	return u.fast.Name()
 }
 
-func (u *URLTest) Dial(metadata *C.Metadata) (net.Conn, error) {
-	a, err := u.fast.Dial(metadata)
-	if err != nil {
+func (u *URLTest) DialContext(ctx context.Context, metadata *C.Metadata) (c C.Conn, err error) {
+	for i := 0; i < 3; i++ {
+		c, err = u.fast.DialContext(ctx, metadata)
+		if err == nil {
+			c.AppendToChains(u)
+			return
+		}
 		u.fallback()
 	}
-	return a, err
+	return
 }
 
-func (u *URLTest) DialUDP(metadata *C.Metadata) (net.PacketConn, net.Addr, error) {
-	return u.fast.DialUDP(metadata)
+func (u *URLTest) DialUDP(metadata *C.Metadata) (C.PacketConn, net.Addr, error) {
+	pc, addr, err := u.fast.DialUDP(metadata)
+	if err == nil {
+		pc.AppendToChains(u)
+	}
+	return pc, addr, err
 }
 
 func (u *URLTest) SupportUDP() bool {
@@ -68,12 +75,15 @@ func (u *URLTest) Destroy() {
 
 func (u *URLTest) loop() {
 	tick := time.NewTicker(u.interval)
-	go u.speedTest()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go u.speedTest(ctx)
 Loop:
 	for {
 		select {
 		case <-tick.C:
-			go u.speedTest()
+			go u.speedTest(ctx)
 		case <-u.done:
 			break Loop
 		}
@@ -97,42 +107,32 @@ func (u *URLTest) fallback() {
 	u.fast = fast
 }
 
-func (u *URLTest) speedTest() {
+func (u *URLTest) speedTest(ctx context.Context) {
 	if !atomic.CompareAndSwapInt32(&u.once, 0, 1) {
 		return
 	}
 	defer atomic.StoreInt32(&u.once, 0)
 
-	wg := sync.WaitGroup{}
-	wg.Add(len(u.proxies))
-	c := make(chan interface{})
-	fast := picker.SelectFast(context.Background(), c)
-	timer := time.NewTimer(u.interval)
-
+	ctx, cancel := context.WithTimeout(ctx, defaultURLTestTimeout)
+	defer cancel()
+	picker := picker.WithoutAutoCancel(ctx)
 	for _, p := range u.proxies {
-		go func(p C.Proxy) {
-			_, err := p.URLTest(u.rawURL)
-			if err == nil {
-				c <- p
+		proxy := p
+		picker.Go(func() (interface{}, error) {
+			_, err := proxy.URLTest(ctx, u.rawURL)
+			if err != nil {
+				return nil, err
 			}
-			wg.Done()
-		}(p)
+			return proxy, nil
+		})
 	}
 
-	go func() {
-		wg.Wait()
-		close(c)
-	}()
-
-	select {
-	case <-timer.C:
-		// Wait for fast to return or close.
-		<-fast
-	case p, open := <-fast:
-		if open {
-			u.fast = p.(C.Proxy)
-		}
+	fast := picker.WaitWithoutCancel()
+	if fast != nil {
+		u.fast = fast.(C.Proxy)
 	}
+
+	picker.Wait()
 }
 
 func NewURLTest(option URLTestOption, proxies []C.Proxy) (*URLTest, error) {

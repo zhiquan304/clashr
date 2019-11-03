@@ -63,6 +63,7 @@ func proxyGroupsDagSort(groupsConfig []map[string]interface{}, decoder *structur
 		if err != nil {
 			return fmt.Errorf("ProxyGroup %s: %s", groupName, err.Error())
 		}
+
 		if node, ok := graph[groupName]; ok {
 			if node.data != nil {
 				return fmt.Errorf("ProxyGroup %s: duplicate group name", groupName)

@@ -33,11 +33,12 @@ func urlToMetadata(rawURL string) (addr C.Metadata, err error) {
 
 	port := u.Port()
 	if port == "" {
-		if u.Scheme == "https" {
+		switch u.Scheme {
+		case "https":
 			port = "443"
-		} else if u.Scheme == "http" {
+		case "http":
 			port = "80"
-		} else {
+		default:
 			err = fmt.Errorf("%s scheme not Support", rawURL)
 			return
 		}
@@ -91,9 +92,6 @@ func dialContext(ctx context.Context, network, address string) (net.Conn, error)
 	if err != nil {
 		return nil, err
 	}
-
-	dialer := net.Dialer{}
-
 	returned := make(chan struct{})
 	defer close(returned)
 
@@ -108,6 +106,7 @@ func dialContext(ctx context.Context, network, address string) (net.Conn, error)
 	var primary, fallback dialResult
 
 	startRacer := func(ctx context.Context, host string, ipv6 bool) {
+		dialer := net.Dialer{}
 		result := dialResult{ipv6: ipv6, done: true}
 		defer func() {
 			select {

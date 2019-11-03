@@ -64,10 +64,12 @@ func Start(addr string, secret string) {
 		r.Get("/logs", getLogs)
 		r.Get("/version", version)
 		r.Get("/traffic", traffic)
+		r.Get("/version", version)
 		r.Mount("/configs", configRouter())
 		r.Mount("/proxies", proxyRouter())
 		r.Mount("/rules", ruleRouter())
 		r.Mount("/sysproxy", systemProxySettingRouter())
+		r.Mount("/connections", connectionRouter())
 	})
 
 	if uiPath != "" {
@@ -145,7 +147,7 @@ func traffic(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tick := time.NewTicker(time.Second)
-	t := T.Instance().Traffic()
+	t := T.DefaultManager
 	buf := &bytes.Buffer{}
 	var err error
 	for range tick.C {

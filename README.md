@@ -20,12 +20,12 @@
 
 ## Features
 
-- HTTP, HTTPS and SOCKS protocol
+- Local HTTP/HTTPS/SOCKS server
 - Surge-like configuration format
 - GeoIP rule support
-- Supports Vmess, Shadowsocks and SOCKS5
+- Supports Vmess, Shadowsocks, Snell and SOCKS5 protocol
 - Supports Netfilter TCP redirecting
-- Comprehensive API
+- Comprehensive HTTP API
 
 ## Install
 
@@ -283,9 +283,10 @@ Rule:
 - DOMAIN-KEYWORD,google,auto
 - DOMAIN,google.com,auto
 - DOMAIN-SUFFIX,ad.com,REJECT
-- IP-CIDR,127.0.0.0/8,DIRECT
 # rename SOURCE-IP-CIDR and would remove after prerelease
 - SRC-IP-CIDR,192.168.1.201/32,DIRECT
+# optional param "no-resolve" for IP rules (GEOIP IP-CIDR)
+- IP-CIDR,127.0.0.0/8,DIRECT
 - GEOIP,CN,DIRECT
 - DST-PORT,80,DIRECT
 - SRC-PORT,7777,DIRECT

@@ -36,7 +36,7 @@ func withFakeIP(fakePool *fakeip.Pool) middleware {
 
 			setMsgTTL(msg, 1)
 			msg.SetReply(r)
-			_ = w.WriteMsg(msg)
+			w.WriteMsg(msg)
 			return
 		}
 	}

@@ -4,8 +4,8 @@ import (
 	"net"
 	"time"
 
-	C "github.com/Dreamacro/clash/constant"
 	"github.com/gofrs/uuid"
+	C "github.com/whojave/clashr/constant"
 )
 
 type tracker interface {

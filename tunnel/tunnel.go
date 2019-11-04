@@ -296,13 +296,11 @@ func (t *Tunnel) match(metadata *C.Metadata) (C.Proxy, C.Rule, error) {
 
 func newTunnel() *Tunnel {
 	return &Tunnel{
-		tcpQueue:  channels.NewInfiniteChannel(),
-		udpQueue:  channels.NewInfiniteChannel(),
-		natTable:  nat.New(),
-		proxies:   make(map[string]C.Proxy),
-		configMux: &sync.RWMutex{},
-		traffic:   C.NewTraffic(time.Second),
-		mode:      Rule,
+		tcpQueue: channels.NewInfiniteChannel(),
+		udpQueue: channels.NewInfiniteChannel(),
+		natTable: nat.New(),
+		proxies:  make(map[string]C.Proxy),
+		mode:     Rule,
 	}
 }
 

@@ -70,10 +70,6 @@ func (m *Metadata) RemoteAddress() string {
 	return net.JoinHostPort(m.String(), m.DstPort)
 }
 
-func (m *Metadata) RemoteAddress() string {
-	return net.JoinHostPort(m.String(), m.DstPort)
-}
-
 func (m *Metadata) String() string {
 	if m.Host != "" {
 		return m.Host

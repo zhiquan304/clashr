@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/whojave/clashr/component/socks5"
+	"github.com/whojave/clash/component/socks5"
 )
 
 func parserPacket(conn net.Conn) (socks5.Addr, error) {

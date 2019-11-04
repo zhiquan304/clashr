@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/whojave/clashr/component/vmess"
+	"github.com/whojave/clash/component/vmess"
 )
 
 // Option is options of websocket obfs

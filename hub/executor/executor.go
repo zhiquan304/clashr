@@ -1,15 +1,15 @@
 package executor
 
 import (
-	"github.com/whojave/clashr/component/auth"
-	trie "github.com/whojave/clashr/component/domain-trie"
-	"github.com/whojave/clashr/config"
-	C "github.com/whojave/clashr/constant"
-	"github.com/whojave/clashr/dns"
-	"github.com/whojave/clashr/log"
-	P "github.com/whojave/clashr/proxy"
-	authStore "github.com/whojave/clashr/proxy/auth"
-	T "github.com/whojave/clashr/tunnel"
+	"github.com/whojave/clash/component/auth"
+	trie "github.com/whojave/clash/component/domain-trie"
+	"github.com/whojave/clash/config"
+	C "github.com/whojave/clash/constant"
+	"github.com/whojave/clash/dns"
+	"github.com/whojave/clash/log"
+	P "github.com/whojave/clash/proxy"
+	authStore "github.com/whojave/clash/proxy/auth"
+	T "github.com/whojave/clash/tunnel"
 )
 
 // Parse config with default config path

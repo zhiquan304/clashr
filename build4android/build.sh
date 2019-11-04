@@ -1,15 +1,15 @@
 #!/bin/bash
 #
 # Build:
-#   - git clone -b dev https://github.com/whojave/clashr
-#   - cd clashr
+#   - git clone -b dev https://github.com/whojave/clash
+#   - cd clash
 #   - ANDROID_NDK=/path/to/android/ndk /path/to/this/script
 #
 
 export ANDROID_NDK=/home/king/Android/Sdk/ndk/20.0.5594570
 # export GOPATH=/usr/lib/go
 
-NAME=clashr
+NAME=clash
 BINDIR=bin
 VERSION=$(git describe --tags || echo "unknown version")
 BUILDTIME=$(LANG=C date -u)
@@ -24,8 +24,8 @@ export CXX=$ANDROID_CXX
 export CC=$ANDROID_CC 
 export LD=$ANDROID_LD 
 export CGO_ENABLED=1
-go build -ldflags "-X \"github.com/whojave/clashr/constant.Version=$VERSION\" -X \"github.com/whojave/clashr/constant.BuildTime=$BUILDTIME\" -w -s" \
-            -o "build4android/clashr_arm64"
+go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X \"github.com/whojave/clash/constant.BuildTime=$BUILDTIME\" -w -s" \
+            -o "build4android/clash_arm64"
 
 
 ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang
@@ -37,8 +37,8 @@ export CXX=$ANDROID_CXX
 export CC=$ANDROID_CC 
 export LD=$ANDROID_LD 
 export CGO_ENABLED=1
-go build -ldflags "-X \"github.com/whojave/clashr/constant.Version=$VERSION\" -X \"github.com/whojave/clashr/constant.BuildTime=$BUILDTIME\" -w -s" \
-            -o "build4android/clashr_armv7a"
+go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X \"github.com/whojave/clash/constant.BuildTime=$BUILDTIME\" -w -s" \
+            -o "build4android/clash_armv7a"
 
 
 ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang
@@ -50,8 +50,8 @@ export CC=$ANDROID_CC
 export LD=$ANDROID_LD 
 export CGO_ENABLED=1
 export GOARCH=386
-go build -ldflags "-X \"github.com/whojave/clashr/constant.Version=$VERSION\" -X \"github.com/whojave/clashr/constant.BuildTime=$BUILDTIME\" -w -s" \
-            -o "build4android/clashr_x86"
+go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X \"github.com/whojave/clash/constant.BuildTime=$BUILDTIME\" -w -s" \
+            -o "build4android/clash_x86"
 
 
 ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang
@@ -63,8 +63,8 @@ export CC=$ANDROID_CC
 export LD=$ANDROID_LD 
 export CGO_ENABLED=1
 export GOARCH=amd64
-go build -ldflags "-X \"github.com/whojave/clashr/constant.Version=$VERSION\" -X \"github.com/whojave/clashr/constant.BuildTime=$BUILDTIME\" -w -s" \
-            -o "build4android/clashr_amd64"
+go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X \"github.com/whojave/clash/constant.BuildTime=$BUILDTIME\" -w -s" \
+            -o "build4android/clash_amd64"
 
 
 

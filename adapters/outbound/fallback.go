@@ -9,8 +9,8 @@ import (
 	"time"
 
 
-	C "github.com/whojave/clashr/constant"
-	"github.com/whojave/clashr/common/picker"
+	C "github.com/whojave/clash/constant"
+	"github.com/whojave/clash/common/picker"
 )
 
 type Fallback struct {

@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/whojave/clashr/hub/executor"
-	"github.com/whojave/clashr/log"
-	P "github.com/whojave/clashr/proxy"
-	T "github.com/whojave/clashr/tunnel"
+	"github.com/whojave/clash/hub/executor"
+	"github.com/whojave/clash/log"
+	P "github.com/whojave/clash/proxy"
+	T "github.com/whojave/clash/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"

@@ -1,20 +1,20 @@
 <h1 align="center">
-  <img src="https://github.com/whojave/clashr/raw/master/docs/logo.png" alt="Clash" width="200">
+  <img src="https://github.com/whojave/clash/raw/master/docs/logo.png" alt="Clash" width="200">
   <br>Clash<br>
 </h1>
 
 <h4 align="center">A rule-based tunnel in Go.</h4>
 
 <p align="center">
-  <a href="https://travis-ci.org/whojave/clashr">
-    <img src="https://img.shields.io/travis/whojave/clashr.svg?style=flat-square"
+  <a href="https://travis-ci.org/whojave/clash">
+    <img src="https://img.shields.io/travis/whojave/clash.svg?style=flat-square"
          alt="Travis-CI">
   </a>
-  <a href="https://goreportcard.com/report/github.com/whojave/clashr">
-    <img src="https://goreportcard.com/badge/github.com/whojave/clashr?style=flat-square">
+  <a href="https://goreportcard.com/report/github.com/whojave/clash">
+    <img src="https://goreportcard.com/badge/github.com/whojave/clash?style=flat-square">
   </a>
-  <a href="https://github.com/whojave/clashr/releases">
-    <img src="https://img.shields.io/github/release/whojave/clashr/all.svg?style=flat-square">
+  <a href="https://github.com/whojave/clash/releases">
+    <img src="https://img.shields.io/github/release/whojave/clash/all.svg?style=flat-square">
   </a>
 </p>
 
@@ -32,10 +32,10 @@
 Clash Requires Go >= 1.13. You can build it from source:
 
 ```sh
-$ go get -u -v github.com/whojave/clashr
+$ go get -u -v github.com/whojave/clash
 ```
 
-Pre-built binaries are available here: [release](https://github.com/whojave/clashr/releases)
+Pre-built binaries are available here: [release](https://github.com/whojave/clash/releases)
 
 Check Clash version with:
 
@@ -57,7 +57,7 @@ $ pm2 start clash
 
 If you have Docker installed, you can run clash directly using `docker-compose`.
 
-[Run clash in docker](https://github.com/whojave/clashr/wiki/Run-clash-in-docker)
+[Run clash in docker](https://github.com/whojave/clash/wiki/Run-clash-in-docker)
 
 ## Config
 

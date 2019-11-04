@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	A "github.com/whojave/clashr/adapters/outbound"
-	C "github.com/whojave/clashr/constant"
-	T "github.com/whojave/clashr/tunnel"
+	A "github.com/whojave/clash/adapters/outbound"
+	C "github.com/whojave/clash/constant"
+	T "github.com/whojave/clash/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"

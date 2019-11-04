@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/whojave/clashr/common/murmur3"
-	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clash/common/murmur3"
+	C "github.com/whojave/clash/constant"
 
 	"golang.org/x/net/publicsuffix"
 )

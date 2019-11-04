@@ -3,7 +3,7 @@ package rules
 import (
 	"strings"
 
-	C "github.com/whojave/clashr/constant"
+	C "github.com/whojave/clash/constant"
 )
 
 type Domain struct {

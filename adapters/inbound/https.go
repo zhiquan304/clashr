@@ -4,7 +4,7 @@ import (
 	"net"
 	"net/http"
 
-	C "github.com/whojave/clashr/constant"
+	C "github.com/whojave/clash/constant"
 )
 
 // NewHTTPS is HTTPAdapter generator

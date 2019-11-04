@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/whojave/clashr/common/cache"
-	"github.com/whojave/clashr/common/picker"
-	trie "github.com/whojave/clashr/component/domain-trie"
-	"github.com/whojave/clashr/component/fakeip"
-	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clash/common/cache"
+	"github.com/whojave/clash/common/picker"
+	trie "github.com/whojave/clash/component/domain-trie"
+	"github.com/whojave/clash/component/fakeip"
+	C "github.com/whojave/clash/constant"
 
 	D "github.com/miekg/dns"
 	geoip2 "github.com/oschwald/geoip2-golang"

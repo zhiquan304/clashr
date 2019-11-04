@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"strconv"
 
-	C "github.com/whojave/clashr/constant"
+	C "github.com/whojave/clash/constant"
 )
 
 type Http struct {

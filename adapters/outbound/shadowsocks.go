@@ -8,11 +8,11 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/whojave/clashr/common/structure"
-	obfs "github.com/whojave/clashr/component/simple-obfs"
-	"github.com/whojave/clashr/component/socks5"
-	v2rayObfs "github.com/whojave/clashr/component/v2ray-plugin"
-	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clash/common/structure"
+	obfs "github.com/whojave/clash/component/simple-obfs"
+	"github.com/whojave/clash/component/socks5"
+	v2rayObfs "github.com/whojave/clash/component/v2ray-plugin"
+	C "github.com/whojave/clash/constant"
 
 	"github.com/Dreamacro/go-shadowsocks2/core"
 )

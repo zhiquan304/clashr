@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/whojave/clashr/component/socks5"
-	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clash/component/socks5"
+	C "github.com/whojave/clash/constant"
 )
 
 func parseSocksAddr(target socks5.Addr) *C.Metadata {

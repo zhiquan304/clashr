@@ -9,8 +9,8 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/whojave/clashr/component/socks5"
-	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clash/component/socks5"
+	C "github.com/whojave/clash/constant"
 )
 
 type Socks5 struct {

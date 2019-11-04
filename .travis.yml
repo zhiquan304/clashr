@@ -21,6 +21,6 @@ deploy:
   file: bin/*
   file_glob: true
   on:
-    repo: whojave/clashr
+    repo: whojave/clash
     branch: master
     tags: true

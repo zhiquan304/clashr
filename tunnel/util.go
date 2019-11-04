@@ -3,7 +3,7 @@ package tunnel
 import (
 	"net"
 
-	C "github.com/whojave/clashr/constant"
+	C "github.com/whojave/clash/constant"
 )
 
 // TrafficTrack record traffic of net.Conn

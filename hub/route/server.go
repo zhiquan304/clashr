@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	C "github.com/whojave/clashr/constant"
-	"github.com/whojave/clashr/log"
-	T "github.com/whojave/clashr/tunnel"
+	C "github.com/whojave/clash/constant"
+	"github.com/whojave/clash/log"
+	T "github.com/whojave/clash/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -125,8 +125,8 @@ func authentication(next http.Handler) http.Handler {
 
 func hello(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, render.M{
-		"Hello":   "clashR",
-		"Group":   "https://t.me/clashr4ssr",
+		"Hello":   "clash",
+		"Group":   "https://t.me/clash4ssr",
 		"Channel": "https://t.me/peekfun",
 	})
 }

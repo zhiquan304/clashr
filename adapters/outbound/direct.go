@@ -4,7 +4,7 @@ import (
 	"context"
 	"net"
 
-	C "github.com/whojave/clashr/constant"
+	C "github.com/whojave/clash/constant"
 )
 
 type Direct struct {

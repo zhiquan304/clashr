@@ -6,10 +6,10 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/whojave/clashr/common/structure"
-	obfs "github.com/whojave/clashr/component/simple-obfs"
-	"github.com/whojave/clashr/component/snell"
-	C "github.com/whojave/clashr/constant"
+	"github.com/whojave/clash/common/structure"
+	obfs "github.com/whojave/clash/component/simple-obfs"
+	"github.com/whojave/clash/component/snell"
+	C "github.com/whojave/clash/constant"
 )
 
 type Snell struct {

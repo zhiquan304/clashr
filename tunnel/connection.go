@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	adapters "github.com/whojave/clashr/adapters/inbound"
-	"github.com/whojave/clashr/common/pool"
+	adapters "github.com/whojave/clash/adapters/inbound"
+	"github.com/whojave/clash/common/pool"
 )
 
 func (t *Tunnel) handleHTTP(request *adapters.HTTPAdapter, outbound net.Conn) {

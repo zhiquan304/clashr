@@ -3,7 +3,7 @@ package route
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"github.com/whojave/clashr/hub/executor"
+	"github.com/whojave/clash/hub/executor"
 	"net/http"
 	"os/exec"
 	"strconv"

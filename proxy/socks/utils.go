@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"net"
 
-	"github.com/whojave/clashr/common/pool"
-	"github.com/whojave/clashr/component/socks5"
+	"github.com/whojave/clash/common/pool"
+	"github.com/whojave/clash/component/socks5"
 )
 
 type fakeConn struct {

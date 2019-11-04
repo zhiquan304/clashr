@@ -3,10 +3,10 @@ package redir
 import (
 	"net"
 
-	"github.com/whojave/clashr/adapters/inbound"
-	C "github.com/whojave/clashr/constant"
-	"github.com/whojave/clashr/log"
-	"github.com/whojave/clashr/tunnel"
+	"github.com/whojave/clash/adapters/inbound"
+	C "github.com/whojave/clash/constant"
+	"github.com/whojave/clash/log"
+	"github.com/whojave/clash/tunnel"
 )
 
 var (

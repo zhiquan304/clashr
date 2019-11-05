@@ -3,10 +3,10 @@
 # Build:
 #   - git clone -b dev https://github.com/whojave/clash
 #   - cd clash
-#   - ANDROID_NDK=/path/to/android/ndk /path/to/this/script
+#   - ANDROID_NDK_HOME=/path/to/android/ndk /path/to/this/script
 #
 
-export ANDROID_NDK=/home/king/Android/Sdk/ndk/20.0.5594570
+export ANDROID_NDK_HOME=/Users/asd/Library/Android/sdk/android-ndk-r20
 # export GOPATH=/usr/lib/go
 
 NAME=clash
@@ -15,9 +15,9 @@ VERSION=$(git describe --tags || echo "unknown version")
 BUILDTIME=$(LANG=C date -u)
 cd ..
 
-ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang
-ANDROID_CXX=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang++
-ANDROID_LD=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ld
+ANDROID_CC=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android21-clang
+ANDROID_CXX=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android21-clang++
+ANDROID_LD=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android-ld
 export GOARCH=arm64 
 export GOOS=android 
 export CXX=$ANDROID_CXX
@@ -28,9 +28,9 @@ go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X 
             -o "build4android/clash_arm64"
 
 
-ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang
-ANDROID_CXX=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang++
-ANDROID_LD=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-android-ld
+ANDROID_CC=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi21-clang
+ANDROID_CXX=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi21-clang++
+ANDROID_LD=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-android-ld
 export GOARCH=arm
 export GOOS=android 
 export CXX=$ANDROID_CXX
@@ -41,9 +41,9 @@ go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X 
             -o "build4android/clash_armv7a"
 
 
-ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang
-ANDROID_CXX=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang++
-ANDROID_LD=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android-ld
+ANDROID_CC=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android21-clang
+ANDROID_CXX=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android21-clang++
+ANDROID_LD=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android-ld
 export GOOS=android 
 export CXX=$ANDROID_CXX
 export CC=$ANDROID_CC 
@@ -54,9 +54,9 @@ go build -ldflags "-X \"github.com/whojave/clash/constant.Version=$VERSION\" -X 
             -o "build4android/clash_x86"
 
 
-ANDROID_CC=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang
-ANDROID_CXX=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang++
-ANDROID_LD=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ld
+ANDROID_CC=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/x86_64-linux-android21-clang
+ANDROID_CXX=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/x86_64-linux-android21-clang++
+ANDROID_LD=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/x86_64-linux-android-ld
 export GOOS=android 
 export CXX=$ANDROID_CXX
 export CC=$ANDROID_CC 

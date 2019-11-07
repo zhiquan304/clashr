@@ -479,7 +479,7 @@ func parseRules(cfg *rawConfig, proxies map[string]C.Proxy) ([]C.Rule, error) {
 		case "SOURCE-IP-CIDR":
 			fallthrough
 		case "SRC-IP-CIDR":
-			parsed, parseErr = R.NewIPCIDR(payload, target, R.WithIPCIDRSourceIP(true))
+			parsed, parseErr = R.NewIPCIDR(payload, target, R.WithIPCIDRSourceIP(true), R.WithIPCIDRNoResolve(true))
 		case "SRC-PORT":
 			parsed, parseErr = R.NewPort(payload, target, true)
 		case "DST-PORT":
@@ -489,6 +489,8 @@ func parseRules(cfg *rawConfig, proxies map[string]C.Proxy) ([]C.Rule, error) {
 		// deprecated when bump to 1.0
 		case "FINAL":
 			parsed = R.NewMatch(target)
+		default:
+			parseErr = fmt.Errorf("unsupported rule type %s", rule[0])
 		}
 
 		if parseErr != nil {

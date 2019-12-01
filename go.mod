@@ -24,9 +24,11 @@ require (
 	github.com/whojave/gossr v0.0.0-20191022040802-3c6b7e7fcb9c
 	gitlab.com/yawning/chacha20.git v0.0.0-20190903091407-6d1cb28dc72c // indirect
 	golang.org/x/crypto v0.0.0-20191029031824-8986dd9e96cf
+	golang.org/x/mobile v0.0.0-20191123054942-d9e324ca8c38 // indirect
 	golang.org/x/net v0.0.0-20191101175033-0deb6923b6d9
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/sys v0.0.0-20191029155521-f43be2a4598c // indirect
+	golang.org/x/tools v0.0.0-20191127201027-ecd32218bd7f // indirect
 	gopkg.in/eapache/channels.v1 v1.1.0
 	gopkg.in/yaml.v2 v2.2.4
 )

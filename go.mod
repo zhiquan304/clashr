@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/Dreamacro/go-shadowsocks2 v0.1.5
-	github.com/dgryski/go-camellia v0.0.0-20140412174459-3be6b3054dd1 // indirect
+	github.com/dgryski/go-camellia v0.0.0-20191119043421-69a8a13fb23d // indirect
 	github.com/dgryski/go-idea v0.0.0-20170306091226-d2fb45a411fb // indirect
 	github.com/dgryski/go-rc2 v0.0.0-20150621095337-8a9021637152 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
@@ -15,7 +15,7 @@ require (
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/gorilla/websocket v1.4.1
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/miekg/dns v1.1.24
+	github.com/miekg/dns v1.1.25
 	github.com/oschwald/geoip2-golang v1.3.0
 	github.com/oschwald/maxminddb-golang v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
@@ -23,9 +23,9 @@ require (
 	github.com/whojave/gossr v0.0.0-20191022040802-3c6b7e7fcb9c
 	gitlab.com/yawning/chacha20.git v0.0.0-20190903091407-6d1cb28dc72c // indirect
 	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
-	golang.org/x/net v0.0.0-20191207000613-e7e4b65ae663
+	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
-	golang.org/x/sys v0.0.0-20191029155521-f43be2a4598c // indirect
+	golang.org/x/sys v0.0.0-20191210023423-ac6580df4449 // indirect
 	gopkg.in/eapache/channels.v1 v1.1.0
 	gopkg.in/yaml.v2 v2.2.7
 )

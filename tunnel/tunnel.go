@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	InboundAdapter "github.com/whojave/clash/adapters/inbound"
+	"github.com/whojave/clash/adapters/inbound"
 	"github.com/whojave/clash/adapters/provider"
 	"github.com/whojave/clash/component/nat"
 	C "github.com/whojave/clash/constant"

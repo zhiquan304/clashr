@@ -1,17 +1,18 @@
-package adapters
+package outbound
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
-	C "github.com/whojave/clash/constant"
-	"github.com/whojave/gossr/obfs"
-	"github.com/whojave/gossr/protocol"
 	"net"
 	"strconv"
 	"strings"
 
-	"github.com/whojave/gossr"
+	C "github.com/whojave/clash/constant"
+	"github.com/whojave/gossr/obfs"
+	"github.com/whojave/gossr/protocol"
+
+	shadowsocksr "github.com/whojave/gossr"
 	"github.com/whojave/gossr/ssr"
 )
 

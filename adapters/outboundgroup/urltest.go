@@ -6,10 +6,10 @@ import (
 	"net"
 	"time"
 
-	"github.com/Dreamacro/clash/adapters/outbound"
-	"github.com/Dreamacro/clash/adapters/provider"
-	"github.com/Dreamacro/clash/common/singledo"
-	C "github.com/Dreamacro/clash/constant"
+	"github.com/whojave/clash/adapters/outbound"
+	"github.com/whojave/clash/adapters/provider"
+	"github.com/whojave/clash/common/singledo"
+	C "github.com/whojave/clash/constant"
 )
 
 type URLTest struct {

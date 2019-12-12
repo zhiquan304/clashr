@@ -12,9 +12,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Dreamacro/clash/adapters/outbound"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
+	"github.com/whojave/clash/adapters/outbound"
+	C "github.com/whojave/clash/constant"
+	"github.com/whojave/clash/log"
 
 	"gopkg.in/yaml.v2"
 )

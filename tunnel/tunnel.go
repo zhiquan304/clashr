@@ -7,6 +7,7 @@ import (
 	"time"
 
 	InboundAdapter "github.com/whojave/clash/adapters/inbound"
+	"github.com/whojave/clash/adapters/provider"
 	"github.com/whojave/clash/component/nat"
 	C "github.com/whojave/clash/constant"
 	"github.com/whojave/clash/dns"
@@ -30,6 +31,7 @@ type Tunnel struct {
 	natTable  *nat.Table
 	rules     []C.Rule
 	proxies   map[string]C.Proxy
+	providers map[string]provider.ProxyProvider
 	configMux sync.RWMutex
 
 	// experimental features
@@ -66,10 +68,16 @@ func (t *Tunnel) Proxies() map[string]C.Proxy {
 	return t.proxies
 }
 
+// Providers return all compatible providers
+func (t *Tunnel) Providers() map[string]provider.ProxyProvider {
+	return t.providers
+}
+
 // UpdateProxies handle update proxies
-func (t *Tunnel) UpdateProxies(proxies map[string]C.Proxy) {
+func (t *Tunnel) UpdateProxies(proxies map[string]C.Proxy, providers map[string]provider.ProxyProvider) {
 	t.configMux.Lock()
 	t.proxies = proxies
+	t.providers = providers
 	t.configMux.Unlock()
 }
 
@@ -240,9 +248,9 @@ func (t *Tunnel) handleTCPConn(localConn C.ServerAdapter) {
 	}
 
 	switch adapter := localConn.(type) {
-	case *InboundAdapter.HTTPAdapter:
+	case *inbound.HTTPAdapter:
 		t.handleHTTP(adapter, remoteConn)
-	case *InboundAdapter.SocketAdapter:
+	case *inbound.SocketAdapter:
 		t.handleSocket(adapter, remoteConn)
 	}
 }

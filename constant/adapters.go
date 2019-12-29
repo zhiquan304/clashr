@@ -61,7 +61,6 @@ type ProxyAdapter interface {
 	DialContext(ctx context.Context, metadata *Metadata) (Conn, error)
 	DialUDP(metadata *Metadata) (PacketConn, net.Addr, error)
 	SupportUDP() bool
-	Destroy()
 	MarshalJSON() ([]byte, error)
 }
 
@@ -109,4 +108,22 @@ func (at AdapterType) String() string {
 	default:
 		return "Unknown"
 	}
+}
+
+// UDPPacket contains the data of UDP packet, and offers control/info of UDP packet's source
+type UDPPacket interface {
+	// Data get the payload of UDP Packet
+	Data() []byte
+
+	// WriteBack writes the payload with source IP/Port equals addr
+	// - variable source IP/Port is important to STUN
+	// - if addr is not provided, WriteBack will wirte out UDP packet with SourceIP/Prot equals to origional Target,
+	//   this is important when using Fake-IP.
+	WriteBack(b []byte, addr net.Addr) (n int, err error)
+
+	// Close closes the underlaying connection.
+	Close() error
+
+	// LocalAddr returns the source IP/Port of packet
+	LocalAddr() net.Addr
 }

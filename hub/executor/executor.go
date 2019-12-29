@@ -1,6 +1,12 @@
 package executor
 
 import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+
+	"github.com/Dreamacro/clash/adapters/provider"
 	"github.com/Dreamacro/clash/component/auth"
 	trie "github.com/Dreamacro/clash/component/domain-trie"
 	"github.com/Dreamacro/clash/config"
@@ -12,6 +18,41 @@ import (
 	T "github.com/Dreamacro/clash/tunnel"
 )
 
+// forward compatibility before 1.0
+func readRawConfig(path string) ([]byte, error) {
+	data, err := ioutil.ReadFile(path)
+	if err == nil && len(data) != 0 {
+		return data, nil
+	}
+
+	if filepath.Ext(path) != ".yaml" {
+		return nil, err
+	}
+
+	path = path[:len(path)-5] + ".yml"
+	if _, fallbackErr := os.Stat(path); fallbackErr == nil {
+		return ioutil.ReadFile(path)
+	}
+
+	return data, err
+}
+
+func readConfig(path string) ([]byte, error) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return nil, err
+	}
+	data, err := readRawConfig(path)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(data) == 0 {
+		return nil, fmt.Errorf("Configuration file %s is empty", path)
+	}
+
+	return data, err
+}
+
 // Parse config with default config path
 func Parse() (*config.Config, error) {
 	return ParseWithPath(C.Path.Config())
@@ -19,7 +60,17 @@ func Parse() (*config.Config, error) {
 
 // ParseWithPath parse config with custom config path
 func ParseWithPath(path string) (*config.Config, error) {
-	return config.Parse(path)
+	buf, err := readConfig(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseWithBytes(buf)
+}
+
+// ParseWithBytes config with buffer
+func ParseWithBytes(buf []byte) (*config.Config, error) {
+	return config.Parse(buf)
 }
 
 // ApplyConfig dispatch configure to all parts
@@ -28,7 +79,7 @@ func ApplyConfig(cfg *config.Config, force bool) {
 	if force {
 		updateGeneral(cfg.General)
 	}
-	updateProxies(cfg.Proxies)
+	updateProxies(cfg.Proxies, cfg.Providers)
 	updateRules(cfg.Rules)
 	updateDNS(cfg.DNS)
 	updateHosts(cfg.Hosts)
@@ -92,16 +143,16 @@ func updateHosts(tree *trie.Trie) {
 	dns.DefaultHosts = tree
 }
 
-func updateProxies(proxies map[string]C.Proxy) {
+func updateProxies(proxies map[string]C.Proxy, providers map[string]provider.ProxyProvider) {
 	tunnel := T.Instance()
-	oldProxies := tunnel.Proxies()
+	oldProviders := tunnel.Providers()
 
-	// close proxy group goroutine
-	for _, proxy := range oldProxies {
-		proxy.Destroy()
+	// close providers goroutine
+	for _, provider := range oldProviders {
+		provider.Destroy()
 	}
 
-	tunnel.UpdateProxies(proxies)
+	tunnel.UpdateProxies(proxies, providers)
 }
 
 func updateRules(rules []C.Rule) {

@@ -4,9 +4,9 @@ import (
 	"sync"
 
 	C "github.com/Dreamacro/clash/constant"
+	"github.com/Dreamacro/clash/log"
 
 	"github.com/oschwald/geoip2-golang"
-	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -15,19 +15,21 @@ var (
 )
 
 type GEOIP struct {
-	country string
-	adapter string
+	country     string
+	adapter     string
+	noResolveIP bool
 }
 
 func (g *GEOIP) RuleType() C.RuleType {
 	return C.GEOIP
 }
 
-func (g *GEOIP) IsMatch(metadata *C.Metadata) bool {
-	if metadata.DstIP == nil {
+func (g *GEOIP) Match(metadata *C.Metadata) bool {
+	ip := metadata.DstIP
+	if ip == nil {
 		return false
 	}
-	record, _ := mmdb.Country(*metadata.DstIP)
+	record, _ := mmdb.Country(ip)
 	return record.Country.IsoCode == g.country
 }
 
@@ -39,16 +41,24 @@ func (g *GEOIP) Payload() string {
 	return g.country
 }
 
-func NewGEOIP(country string, adapter string) *GEOIP {
+func (g *GEOIP) NoResolveIP() bool {
+	return g.noResolveIP
+}
+
+func NewGEOIP(country string, adapter string, noResolveIP bool) *GEOIP {
 	once.Do(func() {
 		var err error
 		mmdb, err = geoip2.Open(C.Path.MMDB())
 		if err != nil {
-			log.Fatalf("Can't load mmdb: %s", err.Error())
+			log.Fatalln("Can't load mmdb: %s", err.Error())
 		}
 	})
-	return &GEOIP{
-		country: country,
-		adapter: adapter,
+
+	geoip := &GEOIP{
+		country:     country,
+		adapter:     adapter,
+		noResolveIP: noResolveIP,
 	}
+
+	return geoip
 }

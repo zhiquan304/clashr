@@ -70,6 +70,10 @@ func (m *Manager) ResetStatistic() {
 	m.downloadTotal = 0
 }
 
+func (m *Manager) Forwarded() int64 {
+	return m.uploadTotal + m.downloadTotal
+}
+
 func (m *Manager) handle() {
 	go m.handleCh(m.upload, &m.uploadTemp, &m.uploadBlip, &m.uploadTotal)
 	go m.handleCh(m.download, &m.downloadTemp, &m.downloadBlip, &m.downloadTotal)

@@ -139,7 +139,7 @@ func (t *tunAdapter) udpHandlePacket(r *stack.Route, id stack.TransportEndpointI
 		r:       r,
 		payload: pkt.Data.ToView(),
 	}
-	tun.AddPacket(adapters.NewPacket(target, packet, C.SOCKS, C.UDP))
+	tun.AddPacket(adapters.NewPacket(target, packet, C.SOCKS))
 
 	return true
 }

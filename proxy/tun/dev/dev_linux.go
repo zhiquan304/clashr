@@ -109,7 +109,6 @@ func (t *tunLinux) AsLinkEndpoint() (result stack.LinkEndpoint, err error) {
 			} else {
 				log.Debugln("Received packet from tun when %s is not attached to any dispatcher.", t.Name())
 			}
-
 		}
 		t.wg.Done()
 		t.Close()

@@ -70,8 +70,12 @@ func (m *Manager) ResetStatistic() {
 	m.downloadTotal = 0
 }
 
-func (m *Manager) Forwarded() int64 {
-	return m.uploadTotal + m.downloadTotal
+func (m *Manager) UploadTotal() int64 {
+	return m.uploadTotal
+}
+
+func (m *Manager) DownloadTotal() int64 {
+	return m.downloadTotal
 }
 
 func (m *Manager) handle() {

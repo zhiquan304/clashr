@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	C "github.com/whojave/clash/constant"
-	"github.com/whojave/gossr/obfs"
-	"github.com/whojave/gossr/protocol"
+	"github.com/mzz2017/shadowsocksR/obfs"
+	"github.com/mzz2017/shadowsocksR/protocol"
 
-	shadowsocksr "github.com/whojave/gossr"
-	"github.com/whojave/gossr/ssr"
+	shadowsocksr "github.com/mzz2017/shadowsocksR"
+	"github.com/mzz2017/shadowsocksR/ssr"
 )
 
 type ShadowsocksR struct {

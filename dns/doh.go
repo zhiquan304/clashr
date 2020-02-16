@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/Dreamacro/clash/component/dialer"
+	"github.com/brobird/clash/component/dialer@clashr-dev"
 
 	D "github.com/miekg/dns"
 )

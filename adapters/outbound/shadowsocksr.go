@@ -60,9 +60,9 @@ func (ssrins *ShadowsocksR) DialContext(ctx context.Context, metadata *C.Metadat
 	if strings.HasSuffix(ssrop.Obfs, "_compatible") {
 		ssrop.Obfs = strings.ReplaceAll(ssrop.Obfs, "_compatible", "")
 	}
-	dstcon.IObfs, err = obfs.NewObfs(ssrop.Obfs)
-	if err != nil {
-		return nil, err
+	dstcon.IObfs = obfs.NewObfs(ssrop.Obfs)
+	if dstcon.IObfs == nil {
+		return nil, errors.New("obfs method do not support")
 	}
 	obfsServerInfo := &ssr.ServerInfoForObfs{
 		Host:   rs[0],
@@ -75,9 +75,9 @@ func (ssrins *ShadowsocksR) DialContext(ctx context.Context, metadata *C.Metadat
 	if strings.HasSuffix(ssrop.Protocol, "_compatible") {
 		ssrop.Protocol = strings.ReplaceAll(ssrop.Protocol, "_compatible", "")
 	}
-	dstcon.IProtocol, err = protocol.NewProtocol(ssrop.Protocol)
-	if err != nil {
-		return nil, err
+	dstcon.IProtocol = protocol.NewProtocol(ssrop.Protocol)
+	if dstcon.IProtocol == nil {
+		return nil, errors.New("protocol do not support")
 	}
 	protocolServerInfo := &ssr.ServerInfoForObfs{
 		Host:   rs[0],

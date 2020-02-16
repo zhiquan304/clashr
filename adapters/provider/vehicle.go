@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/brobird/clash/component/dialer@clashr-dev"
+	"github.com/brobird/clash/component/dialer"
 )
 
 // Vehicle Type

@@ -3,10 +3,10 @@ package socks
 import (
 	"net"
 
-	adapters "github.com/whojave/clash/adapters/inbound"
-	"github.com/whojave/clash/common/pool"
-	"github.com/whojave/clash/component/socks5"
-	C "github.com/whojave/clash/constant"
+	adapters "github.com/brobird/clash/adapters/inbound"
+	"github.com/brobird/clash/common/pool"
+	"github.com/brobird/clash/component/socks5"
+	C "github.com/brobird/clash/constant"
 )
 
 type SockUDPListener struct {

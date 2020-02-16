@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	C "github.com/whojave/clash/constant"
+	C "github.com/brobird/clash/constant"
 	"github.com/whojave/gossr/obfs"
 	"github.com/whojave/gossr/protocol"
 

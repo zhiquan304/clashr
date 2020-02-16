@@ -5,12 +5,12 @@ import (
 	"io/ioutil"
 	"net"
 
-	adapters "github.com/whojave/clash/adapters/inbound"
-	"github.com/whojave/clash/component/socks5"
-	C "github.com/whojave/clash/constant"
-	"github.com/whojave/clash/log"
-	authStore "github.com/whojave/clash/proxy/auth"
-	"github.com/whojave/clash/tunnel"
+	adapters "github.com/brobird/clash/adapters/inbound"
+	"github.com/brobird/clash/component/socks5"
+	C "github.com/brobird/clash/constant"
+	"github.com/brobird/clash/log"
+	authStore "github.com/brobird/clash/proxy/auth"
+	"github.com/brobird/clash/tunnel"
 )
 
 var (

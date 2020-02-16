@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	C "github.com/whojave/clash/constant"
-	"github.com/whojave/clash/log"
+	C "github.com/brobird/clash/constant"
+	"github.com/brobird/clash/log"
 )
 
 func downloadMMDB(path string) (err error) {

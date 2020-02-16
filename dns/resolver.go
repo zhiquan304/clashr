@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/whojave/clash/common/cache"
-	"github.com/whojave/clash/common/picker"
-	trie "github.com/whojave/clash/component/domain-trie"
-	"github.com/whojave/clash/component/fakeip"
+	"github.com/brobird/clash/common/cache"
+	"github.com/brobird/clash/common/picker"
+	trie "github.com/brobird/clash/component/domain-trie"
+	"github.com/brobird/clash/component/fakeip"
 
 	D "github.com/miekg/dns"
 	"golang.org/x/sync/singleflight"

@@ -6,16 +6,16 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/whojave/clash/adapters/provider"
-	"github.com/whojave/clash/component/auth"
-	trie "github.com/whojave/clash/component/domain-trie"
-	"github.com/whojave/clash/config"
-	C "github.com/whojave/clash/constant"
-	"github.com/whojave/clash/dns"
-	"github.com/whojave/clash/log"
-	P "github.com/whojave/clash/proxy"
-	authStore "github.com/whojave/clash/proxy/auth"
-	T "github.com/whojave/clash/tunnel"
+	"github.com/brobird/clash/adapters/provider"
+	"github.com/brobird/clash/component/auth"
+	trie "github.com/brobird/clash/component/domain-trie"
+	"github.com/brobird/clash/config"
+	C "github.com/brobird/clash/constant"
+	"github.com/brobird/clash/dns"
+	"github.com/brobird/clash/log"
+	P "github.com/brobird/clash/proxy"
+	authStore "github.com/brobird/clash/proxy/auth"
+	T "github.com/brobird/clash/tunnel"
 )
 
 // forward compatibility before 1.0

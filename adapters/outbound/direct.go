@@ -4,8 +4,8 @@ import (
 	"context"
 	"net"
 
-	"github.com/brobird/clash/component/dialer@clashr-dev"
-	C "github.com/whojave/clash/constant"
+	"github.com/brobird/clash/component/dialer"
+	C "github.com/brobird/clash/constant"
 )
 
 type Direct struct {

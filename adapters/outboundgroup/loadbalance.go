@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"net"
 
-	"github.com/whojave/clash/adapters/outbound"
-	"github.com/whojave/clash/adapters/provider"
-	"github.com/whojave/clash/common/murmur3"
-	"github.com/whojave/clash/common/singledo"
-	C "github.com/whojave/clash/constant"
+	"github.com/brobird/clash/adapters/outbound"
+	"github.com/brobird/clash/adapters/provider"
+	"github.com/brobird/clash/common/murmur3"
+	"github.com/brobird/clash/common/singledo"
+	C "github.com/brobird/clash/constant"
 
 	"golang.org/x/net/publicsuffix"
 )

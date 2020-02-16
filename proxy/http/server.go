@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	adapters "github.com/whojave/clash/adapters/inbound"
-	"github.com/whojave/clash/common/cache"
-	"github.com/whojave/clash/component/auth"
-	"github.com/whojave/clash/log"
-	authStore "github.com/whojave/clash/proxy/auth"
-	"github.com/whojave/clash/tunnel"
+	adapters "github.com/brobird/clash/adapters/inbound"
+	"github.com/brobird/clash/common/cache"
+	"github.com/brobird/clash/component/auth"
+	"github.com/brobird/clash/log"
+	authStore "github.com/brobird/clash/proxy/auth"
+	"github.com/brobird/clash/tunnel"
 )
 
 var (

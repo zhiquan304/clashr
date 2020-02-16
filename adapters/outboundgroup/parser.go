@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/whojave/clash/adapters/provider"
-	"github.com/whojave/clash/common/structure"
-	C "github.com/whojave/clash/constant"
+	"github.com/brobird/clash/adapters/provider"
+	"github.com/brobird/clash/common/structure"
+	C "github.com/brobird/clash/constant"
 )
 
 var (

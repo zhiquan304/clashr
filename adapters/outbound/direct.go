@@ -4,7 +4,7 @@ import (
 	"context"
 	"net"
 
-	"github.com/brobird/clash/component/dialer@clashr-dev"
+	"../../component/dialer"
 	C "github.com/whojave/clash/constant"
 )
 

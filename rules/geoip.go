@@ -1,7 +1,7 @@
 package rules
 
 import (
-	"github.com/brobird/clash/component/mmdb@clashr-dev"
+	"../component/mmdb"
 	C "github.com/whojave/clash/constant"
 )
 

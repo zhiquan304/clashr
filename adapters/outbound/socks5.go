@@ -9,7 +9,7 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/brobird/clash/component/dialer@clashr-dev"
+	"../../component/dialer"
 	"github.com/whojave/clash/component/socks5"
 	C "github.com/whojave/clash/constant"
 )

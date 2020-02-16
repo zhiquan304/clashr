@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/whojave/clash/common/structure"
-	"github.com/brobird/clash/component/dialer@clashr-dev"
+	"../../component/dialer"
 	obfs "github.com/whojave/clash/component/simple-obfs"
 	"github.com/whojave/clash/component/socks5"
 	v2rayObfs "github.com/whojave/clash/component/v2ray-plugin"

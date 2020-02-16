@@ -1,4 +1,4 @@
-module github.com/whojave/clash
+module github.com/brobird/clash
 
 go 1.13
 

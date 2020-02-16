@@ -42,19 +42,19 @@ func (v *Vmess) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, 
 	return newConn(c, v), err
 }
 
-func (v *Vmess) DialUDP(metadata *C.Metadata) (C.PacketConn, net.Addr, error) {
+func (v *Vmess) DialUDP(metadata *C.Metadata) (C.PacketConn, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), tcpTimeout)
 	defer cancel()
 	c, err := dialContext(ctx, "tcp", v.server)
 	if err != nil {
-		return nil, nil, fmt.Errorf("%s connect error", v.server)
+		return nil, fmt.Errorf("%s connect error", v.server)
 	}
 	tcpKeepAlive(c)
 	c, err = v.client.New(c, parseVmessAddr(metadata))
 	if err != nil {
-		return nil, nil, fmt.Errorf("new vmess client error: %v", err)
+		return nil, fmt.Errorf("new vmess client error: %v", err)
 	}
-	return newPacketConn(&vmessUDPConn{Conn: c}, v), c.RemoteAddr(), nil
+	return newPacketConn(&vmessUDPConn{Conn: c, rAddr: metadata.UDPAddr()}, v), nil
 }
 
 func NewVmess(option VmessOption) (*Vmess, error) {
@@ -117,6 +117,7 @@ func parseVmessAddr(metadata *C.Metadata) *vmess.DstAddr {
 
 type vmessUDPConn struct {
 	net.Conn
+	rAddr net.Addr
 }
 
 func (uc *vmessUDPConn) WriteTo(b []byte, addr net.Addr) (int, error) {
@@ -125,5 +126,5 @@ func (uc *vmessUDPConn) WriteTo(b []byte, addr net.Addr) (int, error) {
 
 func (uc *vmessUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	n, err := uc.Conn.Read(b)
-	return n, uc.RemoteAddr(), err
+	return n, uc.rAddr, err
 }

@@ -4,19 +4,17 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
+	"math/rand"
 	"net"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/whojave/clash/common/cache"
 	"github.com/whojave/clash/common/picker"
 	trie "github.com/whojave/clash/component/domain-trie"
 	"github.com/whojave/clash/component/fakeip"
-	C "github.com/whojave/clash/constant"
 
 	D "github.com/miekg/dns"
-	geoip2 "github.com/oschwald/geoip2-golang"
 	"golang.org/x/sync/singleflight"
 )
 
@@ -30,9 +28,6 @@ var (
 
 var (
 	globalSessionCache = tls.NewLRUClientSessionCache(64)
-
-	mmdb *geoip2.Reader
-	once sync.Once
 )
 
 type resolver interface {
@@ -180,15 +175,11 @@ func (r *Resolver) IsFakeIP(ip net.IP) bool {
 }
 
 func (r *Resolver) batchExchange(clients []resolver, m *D.Msg) (msg *D.Msg, err error) {
-	fast, ctx := picker.WithTimeout(context.Background(), time.Second)
+	fast, ctx := picker.WithTimeout(context.Background(), time.Second*5)
 	for _, client := range clients {
 		r := client
 		fast.Go(func() (interface{}, error) {
-			msg, err := r.ExchangeContext(ctx, m)
-			if err != nil || msg.Rcode != D.RcodeSuccess {
-				return nil, errors.New("resolve error")
-			}
-			return msg, nil
+			return r.ExchangeContext(ctx, m)
 		})
 	}
 
@@ -245,11 +236,12 @@ func (r *Resolver) resolveIP(host string, dnsType uint16) (ip net.IP, err error)
 	}
 
 	ips := r.msgToIP(msg)
-	if len(ips) == 0 {
+	ipLength := len(ips)
+	if ipLength == 0 {
 		return nil, errIPNotFound
 	}
 
-	ip = ips[0]
+	ip = ips[rand.Intn(ipLength)]
 	return
 }
 
@@ -311,10 +303,6 @@ func New(config Config) *Resolver {
 
 	fallbackFilters := []fallbackFilter{}
 	if config.FallbackFilter.GeoIP {
-		once.Do(func() {
-			mmdb, _ = geoip2.Open(C.Path.MMDB())
-		})
-
 		fallbackFilters = append(fallbackFilters, &geoipFilter{})
 	}
 	for _, ipnet := range config.FallbackFilter.IPCIDR {

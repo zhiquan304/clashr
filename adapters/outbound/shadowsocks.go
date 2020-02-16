@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/whojave/clash/common/structure"
+	"github.com/whojave/clash/component/dialer"
 	obfs "github.com/whojave/clash/component/simple-obfs"
 	"github.com/whojave/clash/component/socks5"
 	v2rayObfs "github.com/whojave/clash/component/v2ray-plugin"
@@ -82,24 +83,19 @@ func (ss *ShadowSocks) DialContext(ctx context.Context, metadata *C.Metadata) (C
 	return newConn(c, ss), err
 }
 
-func (ss *ShadowSocks) DialUDP(metadata *C.Metadata) (C.PacketConn, net.Addr, error) {
-	pc, err := net.ListenPacket("udp", "")
+func (ss *ShadowSocks) DialUDP(metadata *C.Metadata) (C.PacketConn, error) {
+	pc, err := dialer.ListenPacket("udp", "")
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	addr, err := resolveUDPAddr("udp", ss.server)
 	if err != nil {
-		return nil, nil, err
-	}
-
-	targetAddr := socks5.ParseAddr(metadata.RemoteAddress())
-	if targetAddr == nil {
-		return nil, nil, fmt.Errorf("parse address %s error: %s", metadata.String(), metadata.DstPort)
+		return nil, err
 	}
 
 	pc = ss.cipher.PacketConn(pc)
-	return newPacketConn(&ssUDPConn{PacketConn: pc, rAddr: targetAddr}, ss), addr, nil
+	return newPacketConn(&ssUDPConn{PacketConn: pc, rAddr: addr}, ss), nil
 }
 
 func (ss *ShadowSocks) MarshalJSON() ([]byte, error) {
@@ -189,15 +185,15 @@ func NewShadowSocks(option ShadowSocksOption) (*ShadowSocks, error) {
 
 type ssUDPConn struct {
 	net.PacketConn
-	rAddr socks5.Addr
+	rAddr net.Addr
 }
 
 func (uc *ssUDPConn) WriteTo(b []byte, addr net.Addr) (n int, err error) {
-	packet, err := socks5.EncodeUDPPacket(uc.rAddr, b)
+	packet, err := socks5.EncodeUDPPacket(socks5.ParseAddrToSocksAddr(addr), b)
 	if err != nil {
 		return
 	}
-	return uc.PacketConn.WriteTo(packet[3:], addr)
+	return uc.PacketConn.WriteTo(packet[3:], uc.rAddr)
 }
 
 func (uc *ssUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {

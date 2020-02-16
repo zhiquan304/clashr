@@ -14,7 +14,6 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/gorilla/websocket v1.4.1
-	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/miekg/dns v1.1.26
 	github.com/oschwald/geoip2-golang v1.4.0
 	github.com/sirupsen/logrus v1.4.2

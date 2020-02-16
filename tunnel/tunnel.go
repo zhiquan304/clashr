@@ -132,8 +132,8 @@ func (t *Tunnel) needLookupIP(metadata *C.Metadata) bool {
 	return dns.DefaultResolver != nil && (dns.DefaultResolver.IsMapping() || dns.DefaultResolver.FakeIPEnabled()) && metadata.Host == "" && metadata.DstIP != nil
 }
 
-func (t *Tunnel) resolveMetadata(metadata *C.Metadata) (C.Proxy, C.Rule, error) {
-	// handle host equal IP string
+func (t *Tunnel) preHandleMetadata(metadata *C.Metadata) error {
+	// handle IP string on host
 	if ip := net.ParseIP(metadata.Host); ip != nil {
 		metadata.DstIP = ip
 	}
@@ -147,9 +147,15 @@ func (t *Tunnel) resolveMetadata(metadata *C.Metadata) (C.Proxy, C.Rule, error) 
 			if dns.DefaultResolver.FakeIPEnabled() {
 				metadata.DstIP = nil
 			}
+		} else if dns.DefaultResolver.IsFakeIP(metadata.DstIP) {
+			return fmt.Errorf("fake DNS record %s missing", metadata.DstIP)
 		}
 	}
 
+	return nil
+}
+
+func (t *Tunnel) resolveMetadata(metadata *C.Metadata) (C.Proxy, C.Rule, error) {
 	var proxy C.Proxy
 	var rule C.Rule
 	switch t.mode {
@@ -175,20 +181,29 @@ func (t *Tunnel) handleUDPConn(packet *inbound.PacketAdapter) {
 		return
 	}
 
-	src := packet.LocalAddr().String()
-	dst := metadata.RemoteAddress()
-	key := src + "-" + dst
+	if err := t.preHandleMetadata(metadata); err != nil {
+		log.Debugln("[Metadata PreHandle] error: %s", err)
+		return
+	}
 
-	pc, addr := t.natTable.Get(key)
+	key := packet.LocalAddr().String()
+	pc := t.natTable.Get(key)
 	if pc != nil {
-		t.handleUDPToRemote(packet, pc, addr)
+		if !metadata.Resolved() {
+			ip, err := t.resolveIP(metadata.Host)
+			if err != nil {
+				log.Warnln("[UDP] Resolve %s failed: %s, %#v", metadata.Host, err.Error(), metadata)
+				return
+			}
+			metadata.DstIP = ip
+		}
+
+		t.handleUDPToRemote(packet, pc, metadata.UDPAddr())
 		return
 	}
 
 	lockKey := key + "-lock"
 	wg, loaded := t.natTable.GetOrCreateLock(lockKey)
-
-	isFakeIP := dns.DefaultResolver != nil && dns.DefaultResolver.IsFakeIP(metadata.DstIP)
 
 	go func() {
 		if !loaded {
@@ -201,33 +216,43 @@ func (t *Tunnel) handleUDPConn(packet *inbound.PacketAdapter) {
 				return
 			}
 
-			rawPc, nAddr, err := proxy.DialUDP(metadata)
+			rawPc, err := proxy.DialUDP(metadata)
 			if err != nil {
 				log.Warnln("[UDP] dial %s error: %s", proxy.Name(), err.Error())
 				t.natTable.Delete(lockKey)
 				wg.Done()
 				return
 			}
-			addr = nAddr
 			pc = newUDPTracker(rawPc, DefaultManager, metadata, rule)
 
-			if rule != nil {
-				log.Infoln("[UDP] %s --> %v match %s using %s", metadata.SrcIP.String(), metadata.String(), rule.RuleType().String(), rawPc.Chains().String())
-			} else {
-				log.Infoln("[UDP] %s --> %v doesn't match any rule using DIRECT", metadata.SrcIP.String(), metadata.String())
+			switch true {
+			case rule != nil:
+				log.Infoln("[UDP] %s --> %v match %s using %s", metadata.SourceAddress(), metadata.String(), rule.RuleType().String(), rawPc.Chains().String())
+			case t.mode == Global:
+				log.Infoln("[UDP] %s --> %v using GLOBAL", metadata.SourceAddress(), metadata.String())
+			case t.mode == Direct:
+				log.Infoln("[UDP] %s --> %v using DIRECT", metadata.SourceAddress(), metadata.String())
+			default:
+				log.Infoln("[UDP] %s --> %v doesn't match any rule using DIRECT", metadata.SourceAddress(), metadata.String())
 			}
 
-			t.natTable.Set(key, pc, addr)
+			t.natTable.Set(key, pc)
 			t.natTable.Delete(lockKey)
 			wg.Done()
-			// in fake-ip mode, Full-Cone NAT can never achieve, fallback to omitting src Addr
-			go t.handleUDPToLocal(packet.UDPPacket, pc, key, isFakeIP, udpTimeout)
+			go t.handleUDPToLocal(packet.UDPPacket, pc, key)
 		}
 
 		wg.Wait()
-		pc, addr := t.natTable.Get(key)
+		pc := t.natTable.Get(key)
 		if pc != nil {
-			t.handleUDPToRemote(packet, pc, addr)
+			if !metadata.Resolved() {
+				ip, err := dns.ResolveIP(metadata.Host)
+				if err != nil {
+					return
+				}
+				metadata.DstIP = ip
+			}
+			t.handleUDPToRemote(packet, pc, metadata.UDPAddr())
 		}
 	}()
 }
@@ -238,6 +263,11 @@ func (t *Tunnel) handleTCPConn(localConn C.ServerAdapter) {
 	metadata := localConn.Metadata()
 	if !metadata.Valid() {
 		log.Warnln("[Metadata] not valid: %#v", metadata)
+		return
+	}
+
+	if err := t.preHandleMetadata(metadata); err != nil {
+		log.Debugln("[Metadata PreHandle] error: %s", err)
 		return
 	}
 
@@ -255,10 +285,15 @@ func (t *Tunnel) handleTCPConn(localConn C.ServerAdapter) {
 	remoteConn = newTCPTracker(remoteConn, DefaultManager, metadata, rule)
 	defer remoteConn.Close()
 
-	if rule != nil {
-		log.Infoln("%s --> %v match %s using %s", metadata.SrcIP.String(), metadata.String(), rule.RuleType().String(), remoteConn.Chains().String())
-	} else {
-		log.Infoln("%s --> %v doesn't match any rule using DIRECT", metadata.SrcIP.String(), metadata.String())
+	switch true {
+	case rule != nil:
+		log.Infoln("[TCP] %s --> %v match %s using %s", metadata.SourceAddress(), metadata.String(), rule.RuleType().String(), remoteConn.Chains().String())
+	case t.mode == Global:
+		log.Infoln("[TCP] %s --> %v using GLOBAL", metadata.SourceAddress(), metadata.String())
+	case t.mode == Direct:
+		log.Infoln("[TCP] %s --> %v using DIRECT", metadata.SourceAddress(), metadata.String())
+	default:
+		log.Infoln("[TCP] %s --> %v doesn't match any rule using DIRECT", metadata.SourceAddress(), metadata.String())
 	}
 
 	switch adapter := localConn.(type) {

@@ -3,7 +3,7 @@ package dns
 import (
 	"context"
 
-	"../component/dialer"
+	"github.com/brobird/clash/component/dialer@clashr-dev"
 
 	D "github.com/miekg/dns"
 )

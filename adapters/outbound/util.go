@@ -11,10 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"../../component/dialer"
+	"github.com/whojave/brobird/component/dialer@clashr-dev"
 	"github.com/whojave/clash/component/socks5"
 	C "github.com/whojave/clash/constant"
-	"../../dns"
+	"github.com/brobird/clash/dns@clashr-dev"
 )
 
 const (

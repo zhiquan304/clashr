@@ -18,6 +18,7 @@ require (
 	github.com/oschwald/geoip2-golang v1.4.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.4.0
+	github.com/brobird/gossr latest
 	gitlab.com/yawning/chacha20.git v0.0.0-20190903091407-6d1cb28dc72c // indirect
 	golang.org/x/crypto v0.0.0-20191219195013-becbf705a915
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553

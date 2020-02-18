@@ -1,12 +1,12 @@
 package tun
 
-import "github.com/Dreamacro/clash/dns"
+import "github.com/Dreamacro/clash/component/resolver"
 
 // TunAdapter hold the state of tun/tap interface
 type TunAdapter interface {
 	Close()
 	DeviceURL() string
 	// Create creates dns server on tun device
-	ReCreateDNSServer(resolver *dns.Resolver, addr string) error
+	ReCreateDNSServer(resolver resolver.Resolver, addr string) error
 	DNSListen() string
 }

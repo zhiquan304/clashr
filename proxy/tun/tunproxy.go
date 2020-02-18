@@ -11,7 +11,7 @@ import (
 	C "github.com/Dreamacro/clash/constant"
 	"github.com/Dreamacro/clash/log"
 	"github.com/Dreamacro/clash/proxy/tun/dev"
-	"github.com/Dreamacro/clash/tunnel"
+	tun "github.com/Dreamacro/clash/tunnel"
 
 	"encoding/binary"
 
@@ -24,10 +24,6 @@ import (
 	"github.com/google/netstack/tcpip/transport/tcp"
 	"github.com/google/netstack/tcpip/transport/udp"
 	"github.com/google/netstack/waiter"
-)
-
-var (
-	tun = tunnel.Instance()
 )
 
 // tunAdapter is the wraper of tun

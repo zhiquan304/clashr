@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"net/url"
@@ -31,7 +32,7 @@ type General struct {
 	Authentication     []string     `json:"authentication"`
 	AllowLan           bool         `json:"allow-lan"`
 	BindAddress        string       `json:"bind-address"`
-	Mode               T.Mode       `json:"mode"`
+	Mode               T.TunnelMode `json:"mode"`
 	LogLevel           log.LogLevel `json:"log-level"`
 	ExternalController string       `json:"-"`
 	ExternalUI         string       `json:"-"`
@@ -40,14 +41,15 @@ type General struct {
 
 // DNS config
 type DNS struct {
-	Enable         bool             `yaml:"enable"`
-	IPv6           bool             `yaml:"ipv6"`
-	NameServer     []dns.NameServer `yaml:"nameserver"`
-	Fallback       []dns.NameServer `yaml:"fallback"`
-	FallbackFilter FallbackFilter   `yaml:"fallback-filter"`
-	Listen         string           `yaml:"listen"`
-	EnhancedMode   dns.EnhancedMode `yaml:"enhanced-mode"`
-	FakeIPRange    *fakeip.Pool
+	Enable            bool             `yaml:"enable"`
+	IPv6              bool             `yaml:"ipv6"`
+	NameServer        []dns.NameServer `yaml:"nameserver"`
+	Fallback          []dns.NameServer `yaml:"fallback"`
+	FallbackFilter    FallbackFilter   `yaml:"fallback-filter"`
+	Listen            string           `yaml:"listen"`
+	EnhancedMode      dns.EnhancedMode `yaml:"enhanced-mode"`
+	DefaultNameserver []dns.NameServer `yaml:"default-nameserver"`
+	FakeIPRange       *fakeip.Pool
 }
 
 // FallbackFilter config
@@ -65,7 +67,8 @@ type Tun struct {
 
 // Experimental config
 type Experimental struct {
-	IgnoreResolveFail bool `yaml:"ignore-resolve-fail"`
+	IgnoreResolveFail bool   `yaml:"ignore-resolve-fail"`
+	Interface         string `yaml:"interface-name"`
 }
 
 // Config is clash config manager
@@ -82,15 +85,16 @@ type Config struct {
 }
 
 type RawDNS struct {
-	Enable         bool              `yaml:"enable"`
-	IPv6           bool              `yaml:"ipv6"`
-	NameServer     []string          `yaml:"nameserver"`
-	Fallback       []string          `yaml:"fallback"`
-	FallbackFilter RawFallbackFilter `yaml:"fallback-filter"`
-	Listen         string            `yaml:"listen"`
-	EnhancedMode   dns.EnhancedMode  `yaml:"enhanced-mode"`
-	FakeIPRange    string            `yaml:"fake-ip-range"`
-	FakeIPFilter   []string          `yaml:"fake-ip-filter"`
+	Enable            bool              `yaml:"enable"`
+	IPv6              bool              `yaml:"ipv6"`
+	NameServer        []string          `yaml:"nameserver"`
+	Fallback          []string          `yaml:"fallback"`
+	FallbackFilter    RawFallbackFilter `yaml:"fallback-filter"`
+	Listen            string            `yaml:"listen"`
+	EnhancedMode      dns.EnhancedMode  `yaml:"enhanced-mode"`
+	FakeIPRange       string            `yaml:"fake-ip-range"`
+	FakeIPFilter      []string          `yaml:"fake-ip-filter"`
+	DefaultNameserver []string          `yaml:"default-nameserver"`
 }
 
 type RawFallbackFilter struct {
@@ -105,7 +109,7 @@ type RawConfig struct {
 	Authentication     []string     `yaml:"authentication"`
 	AllowLan           bool         `yaml:"allow-lan"`
 	BindAddress        string       `yaml:"bind-address"`
-	Mode               T.Mode       `yaml:"mode"`
+	Mode               T.TunnelMode `yaml:"mode"`
 	LogLevel           log.LogLevel `yaml:"log-level"`
 	ExternalController string       `yaml:"external-controller"`
 	ExternalUI         string       `yaml:"external-ui"`
@@ -157,6 +161,10 @@ func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
 			FallbackFilter: RawFallbackFilter{
 				GeoIP:  true,
 				IPCIDR: []string{},
+			},
+			DefaultNameserver: []string{
+				"114.114.114.114",
+				"8.8.8.8",
 			},
 		},
 	}
@@ -480,20 +488,20 @@ func parseNameServer(servers []string) ([]dns.NameServer, error) {
 			return nil, fmt.Errorf("DNS NameServer[%d] format error: %s", idx, err.Error())
 		}
 
-		var host, dnsNetType string
+		var addr, dnsNetType string
 		switch u.Scheme {
 		case "udp":
-			host, err = hostWithDefaultPort(u.Host, "53")
+			addr, err = hostWithDefaultPort(u.Host, "53")
 			dnsNetType = "" // UDP
 		case "tcp":
-			host, err = hostWithDefaultPort(u.Host, "53")
+			addr, err = hostWithDefaultPort(u.Host, "53")
 			dnsNetType = "tcp" // TCP
 		case "tls":
-			host, err = hostWithDefaultPort(u.Host, "853")
+			addr, err = hostWithDefaultPort(u.Host, "853")
 			dnsNetType = "tcp-tls" // DNS over TLS
 		case "https":
 			clearURL := url.URL{Scheme: "https", Host: u.Host, Path: u.Path}
-			host = clearURL.String()
+			addr = clearURL.String()
 			dnsNetType = "https" // DNS over HTTPS
 		default:
 			return nil, fmt.Errorf("DNS NameServer[%d] unsupport scheme: %s", idx, u.Scheme)
@@ -507,7 +515,7 @@ func parseNameServer(servers []string) ([]dns.NameServer, error) {
 			nameservers,
 			dns.NameServer{
 				Net:  dnsNetType,
-				Addr: host,
+				Addr: addr,
 			},
 		)
 	}
@@ -549,6 +557,20 @@ func parseDNS(cfg RawDNS) (*DNS, error) {
 
 	if dnsCfg.Fallback, err = parseNameServer(cfg.Fallback); err != nil {
 		return nil, err
+	}
+
+	if len(cfg.DefaultNameserver) == 0 {
+		return nil, errors.New("default nameserver should have at least one nameserver")
+	}
+	if dnsCfg.DefaultNameserver, err = parseNameServer(cfg.DefaultNameserver); err != nil {
+		return nil, err
+	}
+	// check default nameserver is pure ip addr
+	for _, ns := range dnsCfg.DefaultNameserver {
+		host, _, err := net.SplitHostPort(ns.Addr)
+		if err != nil || net.ParseIP(host) == nil {
+			return nil, errors.New("default nameserver should be pure IP")
+		}
 	}
 
 	if cfg.EnhancedMode == dns.FAKEIP {

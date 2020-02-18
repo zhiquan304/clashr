@@ -1,9 +1,11 @@
 package tun
 
 import (
+	"errors"
 	"fmt"
 	"net"
 
+	"github.com/Dreamacro/clash/component/resolver"
 	"github.com/Dreamacro/clash/dns"
 	"github.com/Dreamacro/clash/log"
 	"github.com/google/netstack/tcpip"
@@ -121,8 +123,7 @@ func (w *dnsResponseWriter) Close() error {
 }
 
 // CreateDNSServer create a dns server on given netstack
-func CreateDNSServer(s *stack.Stack, resolver *dns.Resolver, ip net.IP, port int, nicID tcpip.NICID) (*DNSServer, error) {
-
+func CreateDNSServer(s *stack.Stack, resolver resolver.Resolver, ip net.IP, port int, nicID tcpip.NICID) (*DNSServer, error) {
 	var v4 bool
 	var err error
 
@@ -141,7 +142,12 @@ func CreateDNSServer(s *stack.Stack, resolver *dns.Resolver, ip net.IP, port int
 		address.Addr = ""
 	}
 
-	handler := dns.NewHandler(resolver)
+	r, ok := resolver.(*dns.Resolver)
+	if !ok {
+		return nil, errors.New("Invalid resolver")
+	}
+
+	handler := dns.NewHandler(r)
 	serverIn := &dns.Server{}
 	serverIn.SetHandler(handler)
 
@@ -186,7 +192,7 @@ func CreateDNSServer(s *stack.Stack, resolver *dns.Resolver, ip net.IP, port int
 
 	server := &DNSServer{
 		Server:        serverIn,
-		resolver:      resolver,
+		resolver:      r,
 		stack:         s,
 		tcpListener:   tcpListener,
 		udpEndpoint:   endpoint,
@@ -233,7 +239,7 @@ func (t *tunAdapter) DNSListen() string {
 }
 
 // Stop stop the DNS Server on tun
-func (t *tunAdapter) ReCreateDNSServer(resolver *dns.Resolver, addr string) error {
+func (t *tunAdapter) ReCreateDNSServer(resolver resolver.Resolver, addr string) error {
 	if addr == "" && t.dnsserver == nil {
 		return nil
 	}

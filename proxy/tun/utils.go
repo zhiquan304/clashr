@@ -32,7 +32,11 @@ func (c *fakeConn) WriteBack(b []byte, addr net.Addr) (n int, err error) {
 		return writeUDP(c.r, data, uint16(c.id.LocalPort), c.id.RemotePort)
 	}
 
-	udpaddr, _ := addr.(*net.UDPAddr)
+	udpaddr, ok := addr.(*net.UDPAddr)
+	if !ok {
+		return writeUDP(c.r, data, uint16(c.id.LocalPort), c.id.RemotePort)
+	}
+
 	r := c.r.Clone()
 	if ipv4 := udpaddr.IP.To4(); ipv4 != nil {
 		r.LocalAddress = tcpip.Address(ipv4)

@@ -33,7 +33,7 @@ func (c *fakeConn) WriteBack(b []byte, addr net.Addr) (n int, err error) {
 	}
 
 	udpaddr, ok := addr.(*net.UDPAddr)
-	if !ok {
+	if !ok || udpaddr == nil {
 		return writeUDP(c.r, data, uint16(c.id.LocalPort), c.id.RemotePort)
 	}
 

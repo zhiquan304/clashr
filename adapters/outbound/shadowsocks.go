@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"strconv"
@@ -211,5 +212,11 @@ func (spc *ssPacketConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	}
 	addr := socks5.SplitAddr(b[:n])
 	copy(b, b[len(addr):])
-	return n - len(addr), addr.UDPAddr(), e
+
+	udpaddr := addr.UDPAddr()
+	if udpaddr == nil {
+		return 0, nil, errors.New("Invalid address type")
+	}
+
+	return n - len(addr), udpaddr, e
 }

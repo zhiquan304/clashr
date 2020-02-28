@@ -95,7 +95,7 @@ func (ss *ShadowSocks) DialUDP(metadata *C.Metadata) (C.PacketConn, error) {
 	}
 
 	pc = ss.cipher.PacketConn(pc)
-	return newPacketConn(&ssPacketConn{PacketConn: pc, rAddr: addr, tAddr: metadata.UDPAddr()}, ss), nil
+	return newPacketConn(&ssPacketConn{PacketConn: pc, rAddr: addr}, ss), nil
 }
 
 func (ss *ShadowSocks) MarshalJSON() ([]byte, error) {
@@ -186,7 +186,6 @@ func NewShadowSocks(option ShadowSocksOption) (*ShadowSocks, error) {
 type ssPacketConn struct {
 	net.PacketConn
 	rAddr net.Addr
-	tAddr net.Addr
 }
 
 func (spc *ssPacketConn) WriteTo(b []byte, addr net.Addr) (n int, err error) {
@@ -212,12 +211,5 @@ func (spc *ssPacketConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	}
 	addr := socks5.SplitAddr(b[:n])
 	copy(b, b[len(addr):])
-
-	udpaddr := addr.UDPAddr()
-
-	if udpaddr == nil {
-		return n - len(addr), spc.tAddr, nil
-	}
-
-	return n - len(addr), udpaddr, nil
+	return n - len(addr), addr.UDPAddr(), e
 }

@@ -44,7 +44,7 @@ func (ssrins *ShadowsocksR) DialContext(ctx context.Context, metadata *C.Metadat
 		return nil, err
 	}
 
-	conn, err := dialer.DialContext(ctx, "tcp", ssrins.server)
+	conn, err := DialContext(ctx, "tcp", ssrins.server)
 	if err != nil {
 		return nil, err
 	}

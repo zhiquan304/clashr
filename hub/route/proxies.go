@@ -10,7 +10,7 @@ import (
 	"github.com/brobird/clash/adapters/outbound"
 	"github.com/brobird/clash/adapters/outboundgroup"
 	C "github.com/brobird/clash/constant"
-	T "github.com/brobird/clash/tunnel"
+	"github.com/brobird/clash/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"

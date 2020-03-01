@@ -8,7 +8,7 @@ import (
 	"github.com/brobird/clash/hub/executor"
 	"github.com/brobird/clash/log"
 	P "github.com/brobird/clash/proxy"
-	T "github.com/brobird/clash/tunnel"
+	"github.com/brobird/clash/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"

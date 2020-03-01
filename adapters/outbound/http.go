@@ -14,6 +14,7 @@ import (
 	"strconv"
 
 	C "github.com/brobird/clash/constant"
+	"github.com/brobird/clash/component/dialer"
 )
 
 type Http struct {
@@ -35,7 +36,7 @@ type HttpOption struct {
 }
 
 func (h *Http) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
-	c, err := dialContext(ctx, "tcp", h.addr)
+	c, err := dialer.DialContext(ctx, "tcp", h.addr)
 	if err == nil && h.tlsConfig != nil {
 		cc := tls.Client(c, h.tlsConfig)
 		err = cc.Handshake()

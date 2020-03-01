@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	C "github.com/brobird/clash/constant"
+	"github.com/brobird/clash/component/dialer"
 	"github.com/brobird/gossr/obfs"
 	"github.com/brobird/gossr/protocol"
 
@@ -44,7 +45,7 @@ func (ssrins *ShadowsocksR) DialContext(ctx context.Context, metadata *C.Metadat
 		return nil, err
 	}
 
-	conn, err := dialContext(ctx, "tcp", ssrins.server)
+	conn, err := dialer.DialContext(ctx, "tcp", ssrins.server)
 	if err != nil {
 		return nil, err
 	}

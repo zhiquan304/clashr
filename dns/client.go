@@ -6,8 +6,6 @@ import (
 	"net"
 	"strings"
 
-	"github.com/Dreamacro/clash/component/dialer"
-
 	"github.com/brobird/clash/component/dialer"
 
 	D "github.com/miekg/dns"

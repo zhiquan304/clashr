@@ -2,11 +2,14 @@ package outbound
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"strconv"
 	"strings"
 
+	"github.com/brobird/clash/component/dialer"
+	"github.com/brobird/clash/component/resolver"
 	"github.com/brobird/clash/component/vmess"
 	C "github.com/brobird/clash/constant"
 )
@@ -33,7 +36,7 @@ type VmessOption struct {
 }
 
 func (v *Vmess) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
-	c, err := dialContext(ctx, "tcp", v.server)
+	c, err := dialer.DialContext(ctx, "tcp", v.server)
 	if err != nil {
 		return nil, fmt.Errorf("%s connect error", v.server)
 	}
@@ -43,9 +46,18 @@ func (v *Vmess) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, 
 }
 
 func (v *Vmess) DialUDP(metadata *C.Metadata) (C.PacketConn, error) {
+	// vmess use stream-oriented udp, so clash needs a net.UDPAddr
+	if !metadata.Resolved() {
+		ip, err := resolver.ResolveIP(metadata.Host)
+		if err != nil {
+			return nil, errors.New("can't resolve ip")
+		}
+		metadata.DstIP = ip
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), tcpTimeout)
 	defer cancel()
-	c, err := dialContext(ctx, "tcp", v.server)
+	c, err := dialer.DialContext(ctx, "tcp", v.server)
 	if err != nil {
 		return nil, fmt.Errorf("%s connect error", v.server)
 	}
@@ -54,7 +66,7 @@ func (v *Vmess) DialUDP(metadata *C.Metadata) (C.PacketConn, error) {
 	if err != nil {
 		return nil, fmt.Errorf("new vmess client error: %v", err)
 	}
-	return newPacketConn(&vmessUDPConn{Conn: c, rAddr: metadata.UDPAddr()}, v), nil
+	return newPacketConn(&vmessPacketConn{Conn: c, rAddr: metadata.UDPAddr()}, v), nil
 }
 
 func NewVmess(option VmessOption) (*Vmess, error) {
@@ -115,16 +127,20 @@ func parseVmessAddr(metadata *C.Metadata) *vmess.DstAddr {
 	}
 }
 
-type vmessUDPConn struct {
+type vmessPacketConn struct {
 	net.Conn
 	rAddr net.Addr
 }
 
-func (uc *vmessUDPConn) WriteTo(b []byte, addr net.Addr) (int, error) {
+func (uc *vmessPacketConn) WriteTo(b []byte, addr net.Addr) (int, error) {
 	return uc.Conn.Write(b)
 }
 
-func (uc *vmessUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {
+func (uc *vmessPacketConn) WriteWithMetadata(p []byte, metadata *C.Metadata) (n int, err error) {
+	return uc.Conn.Write(p)
+}
+
+func (uc *vmessPacketConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	n, err := uc.Conn.Read(b)
 	return n, uc.rAddr, err
 }

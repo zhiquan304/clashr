@@ -25,25 +25,25 @@ const (
 // UnmarshalJSON unserialize Mode
 func (m *TunnelMode) UnmarshalJSON(data []byte) error {
 	var tp string
-	err = json.Unmarshal(data, &tp)
+	json.Unmarshal(data, &tp)
 	mode, exist := ModeMapping[tp]
 	if !exist {
 		return errors.New("invalid mode")
 	}
 	*m = mode
-	return
+	return nil
 }
 
 // UnmarshalYAML unserialize Mode with yaml
 func (m *TunnelMode) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var tp string
-	err = unmarshal(&tp)
+	unmarshal(&tp)
 	mode, exist := ModeMapping[tp]
 	if !exist {
 		return errors.New("invalid mode")
 	}
 	*m = mode
-	return
+	return nil
 }
 
 // MarshalJSON serialize Mode

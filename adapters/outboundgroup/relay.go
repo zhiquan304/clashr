@@ -19,6 +19,14 @@ type Relay struct {
 	providers []provider.ProxyProvider
 }
 
+func (r *Relay) GetProxyProviders() []provider.ProxyProvider {
+	return r.providers
+}
+
+func (r *Relay) Now() string {
+	return ""
+}
+
 func (r *Relay) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
 	proxies := r.proxies()
 	if len(proxies) == 0 {

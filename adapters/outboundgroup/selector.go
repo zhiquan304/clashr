@@ -18,6 +18,10 @@ type Selector struct {
 	providers []provider.ProxyProvider
 }
 
+func (s *Selector) GetProxyProviders() []provider.ProxyProvider {
+	return s.providers
+}
+
 func (s *Selector) DialContext(ctx context.Context, metadata *C.Metadata) (C.Conn, error) {
 	c, err := s.selected.DialContext(ctx, metadata)
 	if err == nil {

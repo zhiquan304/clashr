@@ -18,6 +18,10 @@ type URLTest struct {
 	providers  []provider.ProxyProvider
 }
 
+func (u *URLTest) GetProxyProviders() []provider.ProxyProvider {
+	return u.providers
+}
+
 func (u *URLTest) Now() string {
 	return u.fast().Name()
 }

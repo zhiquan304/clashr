@@ -221,7 +221,12 @@ func handleUDPConn(packet *inbound.PacketAdapter) {
 				wg.Done()
 				return
 			}
-			pc = newUDPTracker(rawPc, DefaultManager, metadata, rule)
+
+			if chain := rawPc.Chains(); len(chain) > 0 && chain[0] != "DIRECT" {
+				pc = newUDPTracker(rawPc, DefaultManager, metadata, rule)
+			} else {
+				pc = rawPc
+			}
 
 			switch true {
 			case rule != nil:
@@ -273,7 +278,11 @@ func handleTCPConn(localConn C.ServerAdapter) {
 		log.Warnln("dial %s error: %s", proxy.Name(), err.Error())
 		return
 	}
-	remoteConn = newTCPTracker(remoteConn, DefaultManager, metadata, rule)
+
+	if chain := remoteConn.Chains(); len(chain) > 0 && chain[0] != "DIRECT" {
+		remoteConn = newTCPTracker(remoteConn, DefaultManager, metadata, rule)
+	}
+
 	defer remoteConn.Close()
 
 	switch true {

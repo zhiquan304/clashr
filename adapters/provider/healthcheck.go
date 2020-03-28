@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	defaultURLTestTimeout = time.Second * 5
+	defaultURLTestTimeout = time.Second * 3
 	defaultURLTestURL     = "https://www.gstatic.com/generate_204"
 )
 
@@ -49,27 +49,12 @@ func (hc *HealthCheck) auto() bool {
 
 func (hc *HealthCheck) check() {
 	ctx, cancel := context.WithTimeout(context.Background(), defaultURLTestTimeout)
-	proxies := hc.proxies
-	count := len(proxies)
-	result := make(chan struct{}, count)
-
-	defer cancel()
-
-	for _, proxy := range proxies {
-		go func() {
-			_, _ = proxy.URLTest(ctx, hc.url)
-			result <- struct{}{}
-		}()
+	for _, proxy := range hc.proxies {
+		go proxy.URLTest(ctx, hc.url)
 	}
 
-	for count > 0 {
-		select {
-		case <-ctx.Done():
-			return
-		case <-result:
-			count--
-		}
-	}
+	<-ctx.Done()
+	cancel()
 }
 
 func (hc *HealthCheck) close() {

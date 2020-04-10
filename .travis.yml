@@ -1,25 +1,25 @@
-language: go
-sudo: false
-go:
-  - '1.14'
-install:
-  - "go mod tidy && go mod download"
-env:
-  global:
-    - NAME=clash
-    - BINDIR=bin
-    - GO111MODULE=on
-script:
-  - go test ./...
-before_deploy: make -j$(nproc) releases
-deploy:
-  provider: releases
-  prerelease: true
-  skip_cleanup: true
-  token: "$GITHUB_OAUTH_TOKEN"
-  file: bin/*
-  file_glob: true
-  on:
-    repo: BROBIRD/clash
-    branch: clashr
-    tags: true
+# language: go
+# sudo: false
+# go:
+#   - '1.14'
+# install:
+#   - "go mod tidy && go mod download"
+# env:
+#   global:
+#     - NAME=clash
+#     - BINDIR=bin
+#     - GO111MODULE=on
+# script:
+#   - go test ./...
+# before_deploy: make -j$(nproc) releases
+# deploy:
+#   provider: releases
+#   prerelease: true
+#   skip_cleanup: true
+#   token: "$GITHUB_OAUTH_TOKEN"
+#   file: bin/*
+#   file_glob: true
+#   on:
+#     repo: BROBIRD/clash
+#     branch: clashr
+#     tags: true

@@ -41,4 +41,4 @@ jobs:
         with:
           files: bin/*
           draft: false
-          prerelease: false
+          prerelease: true

@@ -76,14 +76,10 @@ func (h *HTTPVehicle) Path() string {
 }
 
 func (h *HTTPVehicle) Read() ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
-	defer cancel()
-
 	req, err := http.NewRequest(http.MethodGet, h.url, nil)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
 
 	transport := &http.Transport{
 		// from http.DefaultTransport

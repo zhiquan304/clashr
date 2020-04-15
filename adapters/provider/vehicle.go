@@ -2,13 +2,7 @@ package provider
 
 import (
 	"context"
-	"errors"
-	"github.com/Dreamacro/clash/adapters/inbound"
-	"github.com/Dreamacro/clash/component/socks5"
-	"github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/tunnel"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"time"
 )
@@ -91,17 +85,6 @@ func (h *HTTPVehicle) Read() ([]byte, error) {
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
-		DialContext: func(_ context.Context, network string, address string) (net.Conn, error) {
-			if network != "tcp" && network != "tcp4" && network != "tcp6" {
-				return nil, errors.New("Unsupported network type " + network)
-			}
-
-			client, server := net.Pipe()
-
-			tunnel.Add(inbound.NewSocket(socks5.ParseAddr(address), server, constant.HTTP, constant.TCP))
-
-			return client, nil
-		},
 	}
 
 	client := http.Client{Transport: transport}

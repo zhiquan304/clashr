@@ -31,10 +31,10 @@ func NewSocksUDPProxy(addr string) (*SockUDPListener, error) {
 	sl := &SockUDPListener{l, addr, false}
 	go func() {
 		for {
-			buf := pool.BufPool.Get().([]byte)
+			buf := pool.Get(pool.RelayBufferSize)
 			n, remoteAddr, err := l.ReadFrom(buf)
 			if err != nil {
-				pool.BufPool.Put(buf[:cap(buf)])
+				pool.Put(buf)
 				if sl.closed {
 					break
 				}
@@ -60,14 +60,14 @@ func handleSocksUDP(pc net.PacketConn, buf []byte, addr net.Addr) {
 	target, payload, err := socks5.DecodeUDPPacket(buf)
 	if err != nil {
 		// Unresolved UDP packet, return buffer to the pool
-		pool.BufPool.Put(buf[:cap(buf)])
+		pool.Put(buf)
 		return
 	}
-	packet := &fakeConn{
-		PacketConn: pc,
-		rAddr:      addr,
-		payload:    payload,
-		bufRef:     buf,
+	packet := &packet{
+		pc:      pc,
+		rAddr:   addr,
+		payload: payload,
+		bufRef:  buf,
 	}
 	tunnel.AddPacket(adapters.NewPacket(target, packet, C.SOCKS))
 }

@@ -127,5 +127,5 @@ func (ssr *ShadowsocksR) MarshalJSON() ([]byte, error) {
 }
 
 func (ssr *ShadowsocksR) DialUDP(metadata *C.Metadata) (pac C.PacketConn, err error) {
-	return nil, nil
+	return nil, errors.New("UDP not implemented yet.")
 }

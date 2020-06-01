@@ -34,7 +34,7 @@
 Clash requires Go >= 1.13. You can build it from source:
 
 ```sh
-$ go get -u -v github.com/whojave/clash
+$ go get -u -v github.com/paradiseduo/clashr
 ```
 
 Pre-built binaries are available here: [release](https://github.com/Dreamacro/clash/releases)  

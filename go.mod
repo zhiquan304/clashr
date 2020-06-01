@@ -1,4 +1,4 @@
-module github.com/paradiseduo/clash
+module github.com/paradiseduo/clashr
 
 go 1.14
 

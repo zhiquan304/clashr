@@ -3,7 +3,7 @@ package dns
 import (
 	"net"
 
-	"github.com/brobird/clash/component/mmdb"
+	"github.com/paradiseduo/clashr/component/mmdb"
 )
 
 type fallbackFilter interface {

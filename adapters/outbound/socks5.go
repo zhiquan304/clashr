@@ -10,9 +10,9 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/brobird/clash/component/dialer"
-	"github.com/brobird/clash/component/socks5"
-	C "github.com/brobird/clash/constant"
+	"github.com/paradiseduo/clashr/component/dialer"
+	"github.com/paradiseduo/clashr/component/socks5"
+	C "github.com/paradiseduo/clashr/constant"
 )
 
 type Socks5 struct {

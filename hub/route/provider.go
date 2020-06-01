@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/brobird/clash/adapters/provider"
-	"github.com/brobird/clash/tunnel"
+	"github.com/paradiseduo/clashr/adapters/provider"
+	"github.com/paradiseduo/clashr/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"

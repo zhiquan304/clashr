@@ -3,11 +3,11 @@ package redir
 import (
 	"net"
 
-	adapters "github.com/brobird/clash/adapters/inbound"
-	"github.com/brobird/clash/common/pool"
-	"github.com/brobird/clash/component/socks5"
-	C "github.com/brobird/clash/constant"
-	"github.com/brobird/clash/tunnel"
+	adapters "github.com/paradiseduo/clashr/adapters/inbound"
+	"github.com/paradiseduo/clashr/common/pool"
+	"github.com/paradiseduo/clashr/component/socks5"
+	C "github.com/paradiseduo/clashr/constant"
+	"github.com/paradiseduo/clashr/tunnel"
 )
 
 type RedirUDPListener struct {

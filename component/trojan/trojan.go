@@ -11,7 +11,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/brobird/clash/component/socks5"
+	"github.com/paradiseduo/clashr/component/socks5"
 )
 
 const (

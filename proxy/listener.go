@@ -5,11 +5,11 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/brobird/clash/log"
-	"github.com/brobird/clash/proxy/http"
-	"github.com/brobird/clash/proxy/mixed"
-	"github.com/brobird/clash/proxy/redir"
-	"github.com/brobird/clash/proxy/socks"
+	"github.com/paradiseduo/clashr/log"
+	"github.com/paradiseduo/clashr/proxy/http"
+	"github.com/paradiseduo/clashr/proxy/mixed"
+	"github.com/paradiseduo/clashr/proxy/redir"
+	"github.com/paradiseduo/clashr/proxy/socks"
 )
 
 var (

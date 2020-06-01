@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/brobird/clash/adapters/outbound"
-	C "github.com/brobird/clash/constant"
+	"github.com/paradiseduo/clashr/adapters/outbound"
+	C "github.com/paradiseduo/clashr/constant"
 
 	"gopkg.in/yaml.v2"
 )

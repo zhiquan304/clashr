@@ -4,12 +4,12 @@ import (
 	"net"
 	"time"
 
-	"github.com/brobird/clash/common/cache"
-	"github.com/brobird/clash/component/socks5"
-	"github.com/brobird/clash/log"
+	"github.com/paradiseduo/clashr/common/cache"
+	"github.com/paradiseduo/clashr/component/socks5"
+	"github.com/paradiseduo/clashr/log"
 
-	"github.com/brobird/clash/proxy/http"
-	"github.com/brobird/clash/proxy/socks"
+	"github.com/paradiseduo/clashr/proxy/http"
+	"github.com/paradiseduo/clashr/proxy/socks"
 )
 
 type MixedListener struct {

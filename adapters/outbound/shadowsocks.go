@@ -8,12 +8,12 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/brobird/clash/common/structure"
-	"github.com/brobird/clash/component/dialer"
-	obfs "github.com/brobird/clash/component/simple-obfs"
-	"github.com/brobird/clash/component/socks5"
-	v2rayObfs "github.com/brobird/clash/component/v2ray-plugin"
-	C "github.com/brobird/clash/constant"
+	"github.com/paradiseduo/clashr/common/structure"
+	"github.com/paradiseduo/clashr/component/dialer"
+	obfs "github.com/paradiseduo/clashr/component/simple-obfs"
+	"github.com/paradiseduo/clashr/component/socks5"
+	v2rayObfs "github.com/paradiseduo/clashr/component/v2ray-plugin"
+	C "github.com/paradiseduo/clashr/constant"
 
 	"github.com/Dreamacro/go-shadowsocks2/core"
 )

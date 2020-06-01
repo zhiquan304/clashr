@@ -3,8 +3,8 @@ package dns
 import (
 	"strings"
 
-	"github.com/brobird/clash/component/fakeip"
-	"github.com/brobird/clash/log"
+	"github.com/paradiseduo/clashr/component/fakeip"
+	"github.com/paradiseduo/clashr/log"
 
 	D "github.com/miekg/dns"
 )

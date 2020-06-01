@@ -13,8 +13,8 @@ import (
 	"net/url"
 	"strconv"
 
-	C "github.com/brobird/clash/constant"
-	"github.com/brobird/clash/component/dialer"
+	C "github.com/paradiseduo/clashr/constant"
+	"github.com/paradiseduo/clashr/component/dialer"
 )
 
 type Http struct {

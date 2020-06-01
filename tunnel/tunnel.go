@@ -7,13 +7,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/brobird/clash/adapters/inbound"
-	"github.com/brobird/clash/adapters/provider"
-	"github.com/brobird/clash/component/nat"
-	"github.com/brobird/clash/component/resolver"
-	C "github.com/brobird/clash/constant"
-	"github.com/brobird/clash/dns"
-	"github.com/brobird/clash/log"
+	"github.com/paradiseduo/clashr/adapters/inbound"
+	"github.com/paradiseduo/clashr/adapters/provider"
+	"github.com/paradiseduo/clashr/component/nat"
+	"github.com/paradiseduo/clashr/component/resolver"
+	C "github.com/paradiseduo/clashr/constant"
+	"github.com/paradiseduo/clashr/dns"
+	"github.com/paradiseduo/clashr/log"
 
 	channels "gopkg.in/eapache/channels.v1"
 )

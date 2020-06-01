@@ -6,11 +6,11 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/brobird/clash/common/structure"
-	"github.com/brobird/clash/component/dialer"
-	obfs "github.com/brobird/clash/component/simple-obfs"
-	"github.com/brobird/clash/component/snell"
-	C "github.com/brobird/clash/constant"
+	"github.com/paradiseduo/clashr/common/structure"
+	"github.com/paradiseduo/clashr/component/dialer"
+	obfs "github.com/paradiseduo/clashr/component/simple-obfs"
+	"github.com/paradiseduo/clashr/component/snell"
+	C "github.com/paradiseduo/clashr/constant"
 )
 
 type Snell struct {

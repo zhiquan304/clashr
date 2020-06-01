@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/brobird/clash/common/cache"
-	"github.com/brobird/clash/common/picker"
-	"github.com/brobird/clash/component/fakeip"
-	"github.com/brobird/clash/component/resolver"
+	"github.com/paradiseduo/clashr/common/cache"
+	"github.com/paradiseduo/clashr/common/picker"
+	"github.com/paradiseduo/clashr/component/fakeip"
+	"github.com/paradiseduo/clashr/component/resolver"
 
 	D "github.com/miekg/dns"
 	"golang.org/x/sync/singleflight"

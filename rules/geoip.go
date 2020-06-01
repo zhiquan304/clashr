@@ -1,8 +1,8 @@
 package rules
 
 import (
-	"github.com/brobird/clash/component/mmdb"
-	C "github.com/brobird/clash/constant"
+	"github.com/paradiseduo/clashr/component/mmdb"
+	C "github.com/paradiseduo/clashr/constant"
 )
 
 type GEOIP struct {

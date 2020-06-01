@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	C "github.com/brobird/clash/constant"
-	"github.com/brobird/clash/log"
-	T "github.com/brobird/clash/tunnel"
+	C "github.com/paradiseduo/clashr/constant"
+	"github.com/paradiseduo/clashr/log"
+	T "github.com/paradiseduo/clashr/tunnel"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"

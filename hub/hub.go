@@ -1,9 +1,9 @@
 package hub
 
 import (
-	"github.com/brobird/clash/hub/executor"
-	"github.com/brobird/clash/hub/route"
-	"github.com/brobird/clash/config"
+	"github.com/paradiseduo/clashr/hub/executor"
+	"github.com/paradiseduo/clashr/hub/route"
+	"github.com/paradiseduo/clashr/config"
 )
 
 type Option func(*config.Config)

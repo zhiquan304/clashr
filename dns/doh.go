@@ -8,7 +8,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/brobird/clash/component/dialer"
+	"github.com/paradiseduo/clashr/component/dialer"
 
 	D "github.com/miekg/dns"
 )

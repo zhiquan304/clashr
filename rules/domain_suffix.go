@@ -3,7 +3,7 @@ package rules
 import (
 	"strings"
 
-	C "github.com/brobird/clash/constant"
+	C "github.com/paradiseduo/clashr/constant"
 )
 
 type DomainSuffix struct {

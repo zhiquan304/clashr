@@ -9,7 +9,7 @@ import (
 	"github.com/paradiseduo/clashr/adapters/provider"
 	"github.com/paradiseduo/clashr/component/auth"
 	"github.com/paradiseduo/clashr/component/dialer"
-	trie "github.com/paradiseduo/clashr/component/domain-trie"
+	"github.com/paradiseduo/clashr/component/trie"
 	"github.com/paradiseduo/clashr/component/resolver"
 	"github.com/paradiseduo/clashr/config"
 	C "github.com/paradiseduo/clashr/constant"
@@ -154,7 +154,7 @@ func updateDNS(c *config.DNS) {
 	}
 }
 
-func updateHosts(tree *trie.Trie) {
+func updateHosts(tree *trie.DomainTrie) {
 	resolver.DefaultHosts = tree
 }
 

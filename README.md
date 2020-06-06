@@ -37,8 +37,8 @@ Clash requires Go >= 1.13. You can build it from source:
 $ go get -u -v github.com/paradiseduo/clashr
 ```
 
-Pre-built binaries are available here: [release](https://github.com/Dreamacro/clash/releases)  
-Pre-built Premium binaries are available here: [Premium release](https://github.com/Dreamacro/clash/releases/tag/premium). Source is not currently available.
+Pre-built binaries are available here: [release](https://github.com/paradiseduo/clashr/releases)  
+Pre-built Premium binaries are available here: [Premium release](https://github.com/paradiseduo/clashr/releases/tag/premium). Source is not currently available.
 
 Check Clash version with:
 
@@ -56,7 +56,7 @@ In the case of [pm2](https://github.com/Unitech/pm2), start the daemon this way:
 $ pm2 start clash
 ```
 
-If you have Docker installed, it's recommended to deploy Clash directly using `docker-compose`: [run Clash in Docker](https://github.com/Dreamacro/clash/wiki/Run-clash-in-docker)
+If you have Docker installed, it's recommended to deploy Clash directly using `docker-compose`: [run Clash in Docker](https://github.com/paradiseduo/clashr/wiki/Run-clash-in-docker)
 
 ## Config
 
@@ -93,8 +93,8 @@ allow-lan: false
 # "[aaaa::a8aa:ff:fe09:57d8]": bind a single IPv6 address
 # bind-address: "*"
 
-# Rule / Global / Direct (default is Rule)
-mode: Rule
+# rule / global / direct (default is rule)
+mode: rule
 
 # set log level to stdout (default is info)
 # info / warning / error / debug / silent
@@ -120,12 +120,14 @@ experimental:
 #  - "user1:pass1"
 #  - "user2:pass2"
 
-# # experimental hosts, support wildcard (e.g. *.clash.dev Even *.foo.*.example.com)
+# # hosts, support wildcard (e.g. *.clash.dev Even *.foo.*.example.com)
 # # static domain has a higher priority than wildcard domain (foo.example.com > *.example.com > .example.com)
+# # +.foo.com equal .foo.com and foo.com
 # hosts:
 #   '*.clash.dev': 127.0.0.1
 #   '.dev': 127.0.0.1
 #   'alpha.clash.dev': '::1'
+#   '+.foo.dev': 127.0.0.1
 
 # dns:
   # enable: true # set true to enable dns (default is false)
@@ -207,6 +209,7 @@ proxies:
     # udp: true
     # tls: true
     # skip-cert-verify: true
+    # servername: example.com # priority over wss host
     # network: ws
     # ws-path: /path
     # ws-headers:
@@ -292,6 +295,7 @@ proxy-groups:
       - ss1
       - ss2
       - vmess1
+    # tolerance: 150
     url: 'http://www.gstatic.com/generate_204'
     interval: 300
 
@@ -370,7 +374,7 @@ rules:
 </details>
 
 ## Advanced
-[Provider](https://github.com/Dreamacro/clash/wiki/Provider)
+[Provider](https://github.com/paradiseduo/clashr/wiki/Provider)
 
 ## Documentations
 https://clash.gitbook.io/

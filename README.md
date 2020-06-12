@@ -40,23 +40,23 @@ $ go get -u -v github.com/paradiseduo/clashr
 Pre-built binaries are available here: [release](https://github.com/paradiseduo/clashr/releases)  
 Pre-built Premium binaries are available here: [Premium release](https://github.com/paradiseduo/clashr/releases/tag/premium). Source is not currently available.
 
-Check Clash version with:
+Check Clashr version with:
 
 ```sh
 $ clashr -v
 ```
 
-## Daemonize Clash
+## Daemonize Clashr
 
-Unfortunately, there is no native or elegant way to implement daemons on Golang. We recommend using third-party daemon management tools like PM2, Supervisor or the like to keep Clash running as a service.
+Unfortunately, there is no native or elegant way to implement daemons on Golang. We recommend using third-party daemon management tools like PM2, Supervisor or the like to keep Clashr running as a service.
 
 In the case of [pm2](https://github.com/Unitech/pm2), start the daemon this way:
 
 ```sh
-$ pm2 start clash
+$ pm2 start clashr
 ```
 
-If you have Docker installed, it's recommended to deploy Clash directly using `docker-compose`: [run Clash in Docker](https://github.com/paradiseduo/clashr/wiki/Run-clash-in-docker)
+If you have Docker installed, it's recommended to deploy Clashr directly using `docker-compose`: [run Clashr in Docker](https://github.com/paradiseduo/clashr/wiki/Run-clash-in-docker)
 
 ## Config
 

@@ -1,6 +1,6 @@
 <h1 align="center">
   <img src="https://github.com/whojave/clash/raw/master/docs/logo.png" alt="Clash" width="200">
-  <br>Clash<br>
+  <br>Clashr<br>
 </h1>
 
 <h4 align="center">A rule-based tunnel in Go.</h4>
@@ -21,7 +21,7 @@
 ## Features
 
 - Local HTTP/HTTPS/SOCKS server with/without authentication
-- VMess, Shadowsocks, Trojan (experimental), Snell protocol support for remote connections. UDP is supported.
+- VMess, Shadowsocks, ShadowsocksR, Trojan (experimental), Snell protocol support for remote connections. UDP is supported.
 - Built-in DNS server that aims to minimize DNS pollution attacks, supports DoH/DoT upstream. Fake IP is also supported.
 - Rules based off domains, GEOIP, IP CIDR or ports to forward packets to different nodes
 - Remote groups allow users to implement powerful rules. Supports automatic fallback, load balancing or auto select node based off latency
@@ -31,7 +31,7 @@
 
 ## Install
 
-Clash requires Go >= 1.13. You can build it from source:
+Clashr requires Go >= 1.13. You can build it from source:
 
 ```sh
 $ go get -u -v github.com/paradiseduo/clashr
@@ -43,7 +43,7 @@ Pre-built Premium binaries are available here: [Premium release](https://github.
 Check Clash version with:
 
 ```sh
-$ clash -v
+$ clashr -v
 ```
 
 ## Daemonize Clash
@@ -69,7 +69,7 @@ If you want to use another directory, use `-d` to control the configuration dire
 For example, you can use the current directory as the configuration directory:
 
 ```sh
-$ clash -d .
+$ clashr -d .
 ```
 
 <details>

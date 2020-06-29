@@ -82,6 +82,9 @@ port: 7890
 # port of SOCKS5
 socks-port: 7891
 
+# (HTTP and SOCKS5 in one port)
+# mixed-port: 7890
+
 # redir port for Linux and macOS
 # redir-port: 7892
 
@@ -92,6 +95,8 @@ allow-lan: false
 # 192.168.122.11: bind a single IPv4 address
 # "[aaaa::a8aa:ff:fe09:57d8]": bind a single IPv6 address
 # bind-address: "*"
+
+# ipv6: false # when ipv6 is false, each clash dial with ipv6, but it's not affect the response of the dns server, default is false
 
 # rule / global / direct (default is rule)
 mode: rule
@@ -110,10 +115,7 @@ external-controller: 127.0.0.1:9090
 # Secret for RESTful API (Optional)
 # secret: ""
 
-# experimental feature
-experimental:
-  ignore-resolve-fail: true # ignore dns resolve fail, default value is true
-  # interface-name: en0 # outbound interface name
+# interface-name: en0 # outbound interface name
 
 # authentication of local SOCKS5/HTTP(S) server
 # authentication:
@@ -131,7 +133,7 @@ experimental:
 
 # dns:
   # enable: true # set true to enable dns (default is false)
-  # ipv6: false # default is false
+  # ipv6: false # it only affect the dns server response, default is false
   # listen: 0.0.0.0:53
   # # default-nameserver: # resolve dns nameserver host, should fill pure IP
   # #   - 114.114.114.114
@@ -168,7 +170,6 @@ proxies:
     password: "password"
     # udp: true
 
-  # old obfs configuration format remove after prerelease
   - name: "ss2"
     type: ss
     server: server
@@ -367,8 +368,6 @@ rules:
   - GEOIP,CN,DIRECT
   - DST-PORT,80,DIRECT
   - SRC-PORT,7777,DIRECT
-  # FINAL would remove after prerelease
-  # you also can use `FINAL,Proxy` or `FINAL,,Proxy` now
   - MATCH,auto
 ```
 </details>
@@ -395,4 +394,4 @@ https://clash.gitbook.io/
 - [x] Redir proxy
 - [x] UDP support
 - [x] Connection manager
-- [ ] Event API
+- ~~[ ] Event API~~

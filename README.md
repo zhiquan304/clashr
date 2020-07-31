@@ -394,4 +394,4 @@ https://clash.gitbook.io/
 - [x] Redir proxy
 - [x] UDP support
 - [x] Connection manager
-- ~~[ ] Event API~~
+- [ ] ~~Event API~~

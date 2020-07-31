@@ -148,6 +148,7 @@ func traffic(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tick := time.NewTicker(time.Second)
+	defer tick.Stop()
 	t := T.DefaultManager
 	buf := &bytes.Buffer{}
 	var err error

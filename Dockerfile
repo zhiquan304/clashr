@@ -1,4 +1,5 @@
 FROM golang:alpine as builder
+
 RUN apk add --no-cache make git && \
     wget -O /Country.mmdb https://github.com/Dreamacro/maxmind-geoip/releases/latest/download/Country.mmdb
 WORKDIR /clash-src
